@@ -1,0 +1,33 @@
+// Apply the java plugin to add support for Java
+apply plugin: 'application'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    // The production code uses the SLF4J logging API at compile time
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+    compile group: 'com.google.guava', name: 'guava', version: '21.0'
+    compile group: 'com.google.cloud.dataflow', name: 'google-cloud-dataflow-java-sdk-all', version: '1.9.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    compile group: 'org.json', name: 'org.json', version: '2.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr1'
+
+    testCompile 'junit:junit:3.8.2'
+}
+
+jar {
+  manifest {
+    attributes 'MainClass': 'com.gahan.SpotifyFeedMerge' 
+  }
+}
+
+mainClassName = 'com.gahan.SpotifyFeedMerge'
+
+defaultTasks 'clean', 'compileJava'
