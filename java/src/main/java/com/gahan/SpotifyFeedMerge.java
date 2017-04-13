@@ -245,8 +245,8 @@ public class SpotifyFeedMerge {
     //DirectPipelineOptions options = PipelineOptionsFactory.as(DirectPipelineOptions.class);
     //options.setRunner(DirectPipelineRunner.class);
     options.setRunner(DataflowPipelineRunner.class);
-    options.setProject("umg-technical-evaluation");
-    options.setStagingLocation("gs://spotify-feed-merge-staging");
+    options.setProject("spotify-feed-merge");
+    options.setStagingLocation("gs://spotify-feed-merge");
     Pipeline pipeline = Pipeline.create(options);
     pipeline.getCoderRegistry().registerCoder(String.class, StringDelegateCoder.of(String.class));
 
@@ -254,7 +254,7 @@ public class SpotifyFeedMerge {
         .apply(new ReadStreams());
 
       kvs
-        .apply(TextIO.Write.named("WriteIt").to("gs://spotify-feed-merge/denormal").withSuffix(".json"));
+        .apply(TextIO.Write.named("WriteIt").to("gs://spotify-feed-merge/merged").withSuffix(".json"));
 
     pipeline.run();
   }
