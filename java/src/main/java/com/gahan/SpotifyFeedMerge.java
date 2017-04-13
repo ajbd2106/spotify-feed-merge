@@ -86,7 +86,7 @@ public class SpotifyFeedMerge {
             @Override
             public void processElement(ProcessContext c) {
               try {
-                streamData valuesJson = mapper.readValue(c.element().toString(), streamData.class);
+                StreamData valuesJson = mapper.readValue(c.element().toString(), StreamData.class);
                 JsonNode root = mapper.readTree(c.element().toString());
                 String key = root.get("user_id").asText();
                 String streamsString = mapper.writeValueAsString(root);
@@ -108,7 +108,7 @@ public class SpotifyFeedMerge {
             @Override
             public void processElement(ProcessContext c) {
               try {
-                streamData usersJson = mapper.readValue(c.element().toString(), streamData.class);
+                StreamData usersJson = mapper.readValue(c.element().toString(), StreamData.class);
                 JsonNode userRoot = mapper.readTree(c.element().toString());
                 String key = userRoot.get("user_id").asText();
                 String usersString = mapper.writeValueAsString(userRoot);
@@ -137,14 +137,14 @@ public class SpotifyFeedMerge {
             public void processElement(ProcessContext c) {
               try {
                 String userValue = c.element().getValue().getOnly(usersTag).toString(); 
-                streamData user = mapper.readValue(userValue, streamData.class);
+                StreamData user = mapper.readValue(userValue, StreamData.class);
                 JsonNode uRoot = mapper.readTree(userValue);
                 String userString = mapper.writeValueAsString(user);
 
                 String streamValue = c.element().getValue().getAll(streamsTag).toString();
-                List<streamData> streams = mapper.readValue(streamValue, new TypeReference<List<streamData>>(){});
+                List<StreamData> streams = mapper.readValue(streamValue, new TypeReference<List<StreamData>>(){});
                 for (int i = 0; i < streams.size(); i++) {
-                  streamData stream = streams.get(i);
+                  StreamData stream = streams.get(i);
                   JsonNode streamJson = mapper.readTree(mapper.writeValueAsString(stream));
                   ((ObjectNode) streamJson).put("access",uRoot.get("access").asText());
                   ((ObjectNode) streamJson).put("birth_year",uRoot.get("birth_year").asText());
@@ -176,7 +176,7 @@ public class SpotifyFeedMerge {
             public void processElement(ProcessContext c) {
               try {
                 //LOG.info(c.element().toString());  
-                streamData tracksJson = mapper.readValue(c.element().toString(), streamData.class);
+                StreamData tracksJson = mapper.readValue(c.element().toString(), StreamData.class);
                 JsonNode tracksRoot = mapper.readTree(c.element().toString());
                 String key = tracksRoot.get("track_id").asText();
                 //LOG.info(mapper.writeValueAsString(tracksJson));
@@ -205,17 +205,17 @@ public class SpotifyFeedMerge {
             public void processElement(ProcessContext c) {
               try {
                 String streamValue = c.element().getValue().getAll(suTag).toString();
-                List<streamData> streams = mapper.readValue(streamValue, new TypeReference<List<streamData>>(){});
+                List<StreamData> streams = mapper.readValue(streamValue, new TypeReference<List<StreamData>>(){});
                 for (int i = 0; i < streams.size(); i++) {
                   String streamString = mapper.writeValueAsString(streams.get(i));
-                  streamData stream = mapper.readValue(streamString, streamData.class);
+                  StreamData stream = mapper.readValue(streamString, StreamData.class);
                   JsonNode streamJson = mapper.readTree(streamString);
                   String trackValue = c.element().getValue().getAll(tracksTag).toString();
                   //LOG.info("\n\n\ntrackValue\n\n\n"+trackValue);
-                  List<streamData> tracks = mapper.readValue(trackValue, new TypeReference<List<streamData>>(){}); 
+                  List<StreamData> tracks = mapper.readValue(trackValue, new TypeReference<List<StreamData>>(){}); 
                   for (int j = 0; j < tracks.size(); j++) {
                     String trackString = mapper.writeValueAsString(tracks.get(j));
-                    streamData track = mapper.readValue(trackString, streamData.class);
+                    StreamData track = mapper.readValue(trackString, StreamData.class);
                     JsonNode trackJson = mapper.readTree(trackString);
                     //LOG.info("\n\n\nstreamJson\n\n\n"+mapper.writeValueAsString(streamJson));
                     //LOG.info("\n\n\ntrackJson\n\n\n"+mapper.writeValueAsString(trackJson));
