@@ -61,7 +61,7 @@ import java.util.ListIterator;
 import java.util.Set;
 
 public class SpotifyFeedMerge {
-  private static final Logger LOG = LoggerFactory.getLogger(DPRunner.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SpotifyFeedMerge.class);
 
   public static class ReadStreams
       extends PTransform<PInput, PCollection<String>> {
