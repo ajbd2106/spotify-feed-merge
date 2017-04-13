@@ -38,24 +38,6 @@ class ProcessTracks(ab.DoFn):
             })
         return values.get('streams') 
 
-# I amuse myself.
-#def process_users(u, s):
-#    for i,v in enumerate(s):
-#        if s[i].get('user_id') == u.get('user_id'):
-#            s[i].update({
-#                'product':u.get('product'),
-#                'country':u.get('country'),
-#                'region':u.get('region'),
-#                'zip_code':u.get('zip_code'),
-#                'access':u.get('access'),
-#                'gender':u.get('gender'),
-#                'partner':u.get('partner'),
-#                'referral':u.get('referral'),
-#                'type':u.get('type'),
-#                'birth_year':u.get('birth_year')
-#            })
-#    return s 
-
 o = ab.utils.pipeline_options.PipelineOptions()
 gco = o.view_as(ab.utils.pipeline_options.GoogleCloudOptions)
 gco.project = 'umg-technical-evaluation'
