@@ -1,0 +1,31 @@
+---
+- name: Prepare to install pathogen. 
+  file:
+    state: directory
+    dest: "/home/{{ item }}/.vim/autoload"
+    owner: "{{ item }}"
+    group: postgres 
+  with_items: "{{ users }}"
+- name: Prepare some more. 
+  file:
+    state: directory
+    dest: "/home/{{ item }}/.vim/bundle"
+    owner: "{{ item }}"
+    group: postgres 
+  with_items: "{{ users }}"
+- include: git/duchess.yml
+  become_user: duchess
+- name: Replace the default site for Ubuntu.
+  template:
+    src: templates/default
+    dest: /etc/nginx/sites-available/default
+  when: hostvars.{{ inventory_hostname }}.ansible_pkg_mgr == 'apt'
+- name: Make sure and start the nginx service.
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+- debug:
+    var: hostvars.{{ inventory_hostname }}.ansible_all_ipv4_addresses[1]
+...
+# vim: set ft=ansible ff=unix :

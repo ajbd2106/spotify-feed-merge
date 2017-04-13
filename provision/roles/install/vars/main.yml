@@ -1,0 +1,26 @@
+---
+yum_packages:
+  - bzip2-devel
+  - curl-devel
+  - expat-devel
+  - git
+  - net-tools
+  - nginx
+  - nmap
+  - perl-devel
+  - readline-devel
+  - sqlite-devel
+  - vim
+apt_packages:
+  - libbz2-dev 
+  #- libcurl-dev
+  #- libexpat-dev
+  - git
+  - nginx
+  - nmap
+  #- libperl-dev
+  #- libreadline-dev
+  #- libsqlite-dev
+  - vim
+...
+# vim: ft=ansible :

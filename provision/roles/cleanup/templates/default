@@ -1,0 +1,17 @@
+server {
+  listen       80 default_server;
+  listen       [::]:80 default_server;
+  server_name  umg.local; 
+
+  # Load configuration files for the default server block.
+  include /etc/nginx/default.d/*.conf;
+
+  location / {
+    proxy_pass http://0.0.0.0:8000;
+    proxy_set_header    Host            $server_name;
+    proxy_set_header    X-Real-IP       $remote_addr;
+    proxy_set_header    X-Forwarded-for $remote_addr;
+    proxy_read_timeout 1800s;
+    client_max_body_size 1000M;
+  }
+}

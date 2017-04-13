@@ -1,0 +1,20 @@
+---
+- name: Add the MongoDB repository to yum.
+  yum_repository:
+    description: MongoDB Community Edition
+    name: mongodb-org
+    baseurl: https://repo.mongodb.org/yum/redhat/7Server/mongodb-org/3.5/x86_64
+    gpgcheck: yes
+    gpgkey: https://www.mongodb.org/static/pgp/server-3.4.asc
+    enabled: yes
+- name: Let's double check that.
+  copy:
+    src: files/mongodb-org-3.4.repo
+    dest: /etc/yum.repos.d/mongodb-org-3.4.repo
+- name: Install MongoDB
+  yum:
+    name: mongodb-org
+    update_cache: yes 
+    state: latest
+...
+# vim: ft=ansible :

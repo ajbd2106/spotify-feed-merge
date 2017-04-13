@@ -1,0 +1,4 @@
+---
+vm_hostname: umg 
+...
+# vim: ft=ansible :
