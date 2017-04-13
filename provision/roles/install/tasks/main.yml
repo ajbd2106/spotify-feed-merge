@@ -1,5 +1,0 @@
----
-- include: apt.yml
-  when: hostvars.{{ inventory_hostname }}.ansible_pkg_mgr == 'apt'
-...
-# vim: ft=ansible :
