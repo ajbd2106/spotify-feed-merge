@@ -75,7 +75,7 @@ public class SpotifyFeedMerge {
       Pipeline pipeline = input.getPipeline();
 
       PCollection<String> valueString = pipeline
-          .apply(TextIO.Read.from("gs://abbynormal/streams.gz"));
+          .apply(TextIO.Read.from("gs://spotify-feed-merge/streams.gz"));
 
       LOG.info(pipeline.toString());
       LOG.info(valueString.toString());
@@ -100,7 +100,7 @@ public class SpotifyFeedMerge {
         ));
 
       PCollection<String> users = pipeline
-        .apply(TextIO.Read.from("gs://abbynormal/users.gz"));
+        .apply(TextIO.Read.from("gs://spotify-feed-merge/users.gz"));
 
       PCollection<KV<String, String>> userskv = users
         .apply(ParDo.named("UsersKV").of(
@@ -167,7 +167,7 @@ public class SpotifyFeedMerge {
         ));
 
       PCollection<String> tracks = pipeline
-        .apply(TextIO.Read.from("gs://abbynormal/tracks.gz"));
+        .apply(TextIO.Read.from("gs://spotify-feed-merge/tracks.gz"));
 
       PCollection<KV<String, String>> trackskv = tracks
         .apply(ParDo.named("TracksKV").of(
@@ -246,7 +246,7 @@ public class SpotifyFeedMerge {
     //options.setRunner(DirectPipelineRunner.class);
     options.setRunner(DataflowPipelineRunner.class);
     options.setProject("umg-technical-evaluation");
-    options.setStagingLocation("gs://abbynormal-staging");
+    options.setStagingLocation("gs://spotify-feed-merge-staging");
     Pipeline pipeline = Pipeline.create(options);
     pipeline.getCoderRegistry().registerCoder(String.class, StringDelegateCoder.of(String.class));
 
@@ -254,7 +254,7 @@ public class SpotifyFeedMerge {
         .apply(new ReadStreams());
 
       kvs
-        .apply(TextIO.Write.named("WriteIt").to("gs://abbynormal/denormal").withSuffix(".json"));
+        .apply(TextIO.Write.named("WriteIt").to("gs://spotify-feed-merge/denormal").withSuffix(".json"));
 
     pipeline.run();
   }

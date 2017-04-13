@@ -1,6 +1,6 @@
 package com.gahan;
 
-public class streamData {
+public class StreamData {
   public String user_id;
   public String isrc;
   public String album_code;
