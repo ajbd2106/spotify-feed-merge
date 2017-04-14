@@ -210,7 +210,7 @@ public class SpotifyFeedMerge {
       final TupleTag<String> suTag= new TupleTag<String>();
       KeyedPCollectionTuple<String> coGetbkInput = KeyedPCollectionTuple
         .of(suTag, streamsUsers)
-        .and(tracksTag, tracks);
+        .and(tracksTag, this.tracks);
 
       PCollection<KV<String, CoGbkResult>> streamsTracksGroupBy = coGetbkInput
         .apply("CoGroupByTrackId", CoGroupByKey.<String>create());
@@ -272,11 +272,11 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> tracks = pipeline
         .apply(new ReadTracks());
 
-    PCollection<String> kvs = pipeline
-        .apply(new ReadStreams(tracks));
+    //PCollection<String> kvs = pipeline
+    //    .apply(new ReadStreams(tracks));
 
-      kvs
-        .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
+    //  kvs
+    //    .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
 
     pipeline.run();
   }
