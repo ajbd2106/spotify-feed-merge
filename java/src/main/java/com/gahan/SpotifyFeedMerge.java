@@ -106,9 +106,6 @@ public class SpotifyFeedMerge {
 
     PCollection<KV<String, String>> tracks;
 
-    public ReadStreams(PCollection<KV<String, String>> tracks) {
-      this.tracks = tracks;
-    }
       PCollection<String> users = pipeline
         .apply(TextIO.Read.from("gs://sfm-bucket/users.gz"));
 
