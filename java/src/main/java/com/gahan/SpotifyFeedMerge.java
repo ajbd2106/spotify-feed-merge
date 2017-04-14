@@ -102,7 +102,10 @@ public class SpotifyFeedMerge {
   public static class ReadStreams
       extends PTransform<PInput, PCollection<String>> {
 
+    PCollection<KV<String, String>> tracks;
+
     public ReadStreams(PCollection<KV<String, String>> tracks) {
+      this.tracks = tracks;
     }
 
     public PCollection<String> apply(PInput input) {
@@ -207,7 +210,7 @@ public class SpotifyFeedMerge {
       final TupleTag<String> suTag= new TupleTag<String>();
       KeyedPCollectionTuple<String> coGetbkInput = KeyedPCollectionTuple
         .of(suTag, streamsUsers)
-        .and(tracksTag, tracksKeyValue);
+        .and(tracksTag, tracks);
 
       PCollection<KV<String, CoGbkResult>> streamsTracksGroupBy = coGetbkInput
         .apply("CoGroupByTrackId", CoGroupByKey.<String>create());
