@@ -101,6 +101,8 @@ public class SpotifyFeedMerge {
       return streamsKeyValue;
     }
 
+  }
+
   public static class TransformStreams
     extends PTransform<PInput, PCollection<String>> {
 
