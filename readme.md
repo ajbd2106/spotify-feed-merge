@@ -30,3 +30,5 @@ data = {
 }
 ```
 
+[![Build Status](https://semaphoreci.com/api/v1/gahancorpcfo/spotify-feed-merge/branches/master/badge.svg)](https://semaphoreci.com/gahancorpcfo/spotify-feed-merge)
+
