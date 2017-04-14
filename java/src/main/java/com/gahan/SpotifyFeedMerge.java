@@ -103,6 +103,7 @@ public class SpotifyFeedMerge {
 
   }
 
+  /*
   public static class TransformStreams
     extends PTransform<PInput, PCollection<String>> {
 
@@ -223,6 +224,7 @@ public class SpotifyFeedMerge {
       return streamsTracks; 
     }
   }
+  */
 
   public static class ReadTracks
       extends PTransform<PInput, PCollection<KV<String, String>>> {
