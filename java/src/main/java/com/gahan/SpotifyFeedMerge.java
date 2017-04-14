@@ -274,6 +274,11 @@ public class SpotifyFeedMerge {
     Pipeline pipeline = Pipeline.create(options);
     pipeline.getCoderRegistry().registerCoder(String.class, StringDelegateCoder.of(String.class));
 
+    PCollection<KV<String, String>> streams = pipeline
+        .apply(new ReadStreams());
+
+    LOG.info("Streams: " + streams.toString());
+
     PCollection<KV<String, String>> tracks = pipeline
         .apply(new ReadTracks());
 
