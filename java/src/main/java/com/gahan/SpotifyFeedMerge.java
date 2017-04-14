@@ -63,10 +63,50 @@ import java.util.Set;
 public class SpotifyFeedMerge {
   private static final Logger LOG = LoggerFactory.getLogger(SpotifyFeedMerge.class);
 
+  public static class ReadTracks
+      extends PTransform<PInput, PCollection<KV<String, String>>> {
+
+      public ReadTracks() {}
+
+      public PCollection<KV<String, String>> apply(PInput input) {
+        ObjectMapper mapper = new ObjectMapper();
+        Pipeline pipeline = input.getPipeline();
+
+        PCollection<String> tracks = pipeline
+          .apply(TextIO.Read.from("gs://sfm-bucket/tracks.gz"));
+
+        PCollection<KV<String, String>> tracksKeyValue = tracks
+          .apply(ParDo.named("TracksKV").of(
+            new DoFn<String, KV<String, String>>() {
+              @Override
+              public void processElement(ProcessContext c) {
+                try {
+                  //LOG.info(c.element().toString());  
+                  StreamData tracksJson = mapper.readValue(c.element().toString(), StreamData.class);
+                  JsonNode tracksRoot = mapper.readTree(c.element().toString());
+                  String key = tracksRoot.get("track_id").asText();
+                  //LOG.info(mapper.writeValueAsString(tracksJson));
+                  c.output(KV.of(key, mapper.writeValueAsString(tracksJson)));
+                }
+                catch (IOException e) {
+                  LOG.info(e.toString());
+                }
+              }
+            }
+          ));
+
+        return tracksKeyValue;
+      }
+  }
+
   public static class ReadStreams
       extends PTransform<PInput, PCollection<String>> {
 
-    public ReadStreams() {}
+    PCollection<KV<String, String>> tracks;
+
+    public ReadStreams(PCollection<KV<String, String>> tracks) {
+      this.tracks = tracks;
+    }
 
     public PCollection<String> apply(PInput input) {
       ObjectMapper mapper = new ObjectMapper();
@@ -166,34 +206,11 @@ public class SpotifyFeedMerge {
           }
         ));
 
-      PCollection<String> tracks = pipeline
-        .apply(TextIO.Read.from("gs://sfm-bucket/tracks.gz"));
-
-      PCollection<KV<String, String>> trackskv = tracks
-        .apply(ParDo.named("TracksKV").of(
-          new DoFn<String, KV<String, String>>() {
-            @Override
-            public void processElement(ProcessContext c) {
-              try {
-                //LOG.info(c.element().toString());  
-                StreamData tracksJson = mapper.readValue(c.element().toString(), StreamData.class);
-                JsonNode tracksRoot = mapper.readTree(c.element().toString());
-                String key = tracksRoot.get("track_id").asText();
-                //LOG.info(mapper.writeValueAsString(tracksJson));
-                c.output(KV.of(key, mapper.writeValueAsString(tracksJson)));
-              }
-              catch (IOException e) {
-                LOG.info(e.toString());
-              }
-            }
-          }
-        ));
-
       final TupleTag<String> tracksTag = new TupleTag<String>();
       final TupleTag<String> suTag= new TupleTag<String>();
       KeyedPCollectionTuple<String> coGetbkInput = KeyedPCollectionTuple
         .of(suTag, streamsUsers)
-        .and(tracksTag, trackskv);
+        .and(tracksTag, this.tracks);
 
       PCollection<KV<String, CoGbkResult>> streamsTracksGroupBy = coGetbkInput
         .apply("CoGroupByTrackId", CoGroupByKey.<String>create());
@@ -242,19 +259,24 @@ public class SpotifyFeedMerge {
 
   public static void main(String[] args) throws Exception {
     DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
-    //DirectPipelineOptions options = PipelineOptionsFactory.as(DirectPipelineOptions.class);
-    //options.setRunner(DirectPipelineRunner.class);
+
+    // Set options for the Dataflow Pipeline
     options.setRunner(DataflowPipelineRunner.class);
     options.setProject("spotify-feed-merge");
     options.setStagingLocation("gs://sfm-staging");
+
+    // Create the pipeline and set a registry.
     Pipeline pipeline = Pipeline.create(options);
     pipeline.getCoderRegistry().registerCoder(String.class, StringDelegateCoder.of(String.class));
 
-    PCollection<String> kvs = pipeline
-        .apply(new ReadStreams());
+    PCollection<KV<String, String>> tracks = pipeline
+        .apply(new ReadTracks());
 
-      kvs
-        .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
+    //PCollection<String> kvs = pipeline
+    //    .apply(new ReadStreams(tracks));
+
+    //  kvs
+    //    .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
 
     pipeline.run();
   }
