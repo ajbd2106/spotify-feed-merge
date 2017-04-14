@@ -75,7 +75,7 @@ public class SpotifyFeedMerge {
       Pipeline pipeline = input.getPipeline();
 
       PCollection<String> valueString = pipeline
-          .apply(TextIO.Read.from("gs://spotify-feed-merge/streams.gz"));
+          .apply(TextIO.Read.from("gs://sfm-bucket/streams.gz"));
 
       LOG.info(pipeline.toString());
       LOG.info(valueString.toString());
@@ -100,7 +100,7 @@ public class SpotifyFeedMerge {
         ));
 
       PCollection<String> users = pipeline
-        .apply(TextIO.Read.from("gs://spotify-feed-merge/users.gz"));
+        .apply(TextIO.Read.from("gs://sfm-bucket/users.gz"));
 
       PCollection<KV<String, String>> userskv = users
         .apply(ParDo.named("UsersKV").of(
@@ -167,7 +167,7 @@ public class SpotifyFeedMerge {
         ));
 
       PCollection<String> tracks = pipeline
-        .apply(TextIO.Read.from("gs://spotify-feed-merge/tracks.gz"));
+        .apply(TextIO.Read.from("gs://sfm-bucket/tracks.gz"));
 
       PCollection<KV<String, String>> trackskv = tracks
         .apply(ParDo.named("TracksKV").of(
