@@ -1,64 +1,22 @@
 package com.gahan;
 
-import com.google.cloud.dataflow.sdk.Pipeline;
-import com.google.cloud.dataflow.sdk.coders.Coder;
-import com.google.cloud.dataflow.sdk.coders.KvCoder;
-import com.google.cloud.dataflow.sdk.coders.StringDelegateCoder;
-import com.google.cloud.dataflow.sdk.coders.StringUtf8Coder;
-import com.google.cloud.dataflow.sdk.io.TextIO;
-import com.google.cloud.dataflow.sdk.options.DataflowPipelineOptions;
-import com.google.cloud.dataflow.sdk.options.Default;
-import com.google.cloud.dataflow.sdk.options.Description;
-import com.google.cloud.dataflow.sdk.options.DirectPipelineOptions;
-import com.google.cloud.dataflow.sdk.options.PipelineOptions;
-import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
-import com.google.cloud.dataflow.sdk.options.Validation;
-import com.google.cloud.dataflow.sdk.runners.DataflowPipelineRunner;
-import com.google.cloud.dataflow.sdk.runners.DirectPipelineRunner;
-import com.google.cloud.dataflow.sdk.transforms.Count;
-import com.google.cloud.dataflow.sdk.transforms.DoFn;
-import com.google.cloud.dataflow.sdk.transforms.Flatten;
-import com.google.cloud.dataflow.sdk.transforms.Flatten.FlattenIterables;
-import com.google.cloud.dataflow.sdk.transforms.Keys;
-import com.google.cloud.dataflow.sdk.transforms.PTransform;
-import com.google.cloud.dataflow.sdk.transforms.ParDo;
-import com.google.cloud.dataflow.sdk.transforms.RemoveDuplicates;
-import com.google.cloud.dataflow.sdk.transforms.Values;
-import com.google.cloud.dataflow.sdk.transforms.View;
-import com.google.cloud.dataflow.sdk.transforms.WithKeys;
-import com.google.cloud.dataflow.sdk.transforms.join.CoGbkResult;
-import com.google.cloud.dataflow.sdk.transforms.join.CoGroupByKey;
-import com.google.cloud.dataflow.sdk.transforms.join.KeyedPCollectionTuple;
-import com.google.cloud.dataflow.sdk.util.GcsUtil;
-import com.google.cloud.dataflow.sdk.util.gcsfs.GcsPath;
-import com.google.cloud.dataflow.sdk.values.KV;
-import com.google.cloud.dataflow.sdk.values.PCollection;
-import com.google.cloud.dataflow.sdk.values.PCollectionList;
-import com.google.cloud.dataflow.sdk.values.PCollectionView;
-import com.google.cloud.dataflow.sdk.values.PDone;
-import com.google.cloud.dataflow.sdk.values.PInput;
-import com.google.cloud.dataflow.sdk.values.TupleTag;
+import com.google.cloud.dataflow.sdk.*;
+import com.google.cloud.dataflow.sdk.coders.*;
+import com.google.cloud.dataflow.sdk.io.*;
+import com.google.cloud.dataflow.sdk.options.*;
+import com.google.cloud.dataflow.sdk.runners.*;
+import com.google.cloud.dataflow.sdk.transforms.*;
+import com.google.cloud.dataflow.sdk.transforms.join.*;
+import com.google.cloud.dataflow.sdk.values.*;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.*;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 public class SpotifyFeedMerge {
   private static final Logger LOG = LoggerFactory.getLogger(SpotifyFeedMerge.class);
@@ -104,56 +62,6 @@ public class SpotifyFeedMerge {
   }
 
   /*
-  public static class TransformStreams
-    extends PTransform<PInput, PCollection<String>> {
-
-    PCollection<KV<String, String>> tracks;
-
-
-      final TupleTag<String> streamsTag = new TupleTag<String>();
-      final TupleTag<String> usersTag = new TupleTag<String>();
-      KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
-          .of(streamsTag, streamskv)
-          .and(usersTag, userskv);
-
-      PCollection<KV<String, CoGbkResult>> streamsUsersGroupBy = coGbkInput
-          .apply("CoGroupByUserId", CoGroupByKey.<String>create());
-
-      PCollection<KV<String, String>> streamsUsers = streamsUsersGroupBy
-        .apply(ParDo.named("streamsUsers").of(
-          new DoFn<KV<String, CoGbkResult>, KV<String, String>>() {
-            @Override
-            public void processElement(ProcessContext c) {
-              try {
-                String userValue = c.element().getValue().getOnly(usersTag).toString(); 
-                StreamData user = mapper.readValue(userValue, StreamData.class);
-                JsonNode uRoot = mapper.readTree(userValue);
-                String userString = mapper.writeValueAsString(user);
-
-                String streamValue = c.element().getValue().getAll(streamsTag).toString();
-                List<StreamData> streams = mapper.readValue(streamValue, new TypeReference<List<StreamData>>(){});
-                for (int i = 0; i < streams.size(); i++) {
-                  StreamData stream = streams.get(i);
-                  JsonNode streamJson = mapper.readTree(mapper.writeValueAsString(stream));
-                  ((ObjectNode) streamJson).put("access",uRoot.get("access").asText());
-                  ((ObjectNode) streamJson).put("birth_year",uRoot.get("birth_year").asText());
-                  ((ObjectNode) streamJson).put("country",uRoot.get("country").asText());
-                  ((ObjectNode) streamJson).put("gender",uRoot.get("gender").asText());
-                  ((ObjectNode) streamJson).put("partner",uRoot.get("partner").asText());
-                  ((ObjectNode) streamJson).put("referral",uRoot.get("referral").asText());
-                  ((ObjectNode) streamJson).put("region",uRoot.get("region").asText());
-                  ((ObjectNode) streamJson).put("type",uRoot.get("type").asText());
-                  ((ObjectNode) streamJson).put("zip_code",uRoot.get("zip_code").asText());
-                  String key = streamJson.get("track_id").asText(); 
-                  c.output(KV.of(key,mapper.writeValueAsString(streamJson)));
-                }
-              }
-              catch (IOException e) {
-                LOG.info(e.toString());
-              }
-            }
-          }
-        ));
 
       final TupleTag<String> tracksTag = new TupleTag<String>();
       final TupleTag<String> suTag= new TupleTag<String>();
@@ -276,13 +184,81 @@ public class SpotifyFeedMerge {
     }
   }
 
+  public static class TransformStreamsUsers
+    extends PTransform<PCollectionList<KV<String, String>>, PCollection<KV<String, String>>> {
+
+    public PCollection<KV<String, String>> apply(PCollectionList<KV<String, String>>input) {
+      ObjectMapper mapper = new ObjectMapper();
+      Pipeline p = input.getPipeline();
+      KV<String, String> keyValue = KV.of("userid","value"); 
+
+      PCollection<KV<String, String>> streams = input.get(0);
+      PCollection<KV<String, String>> users = input.get(1);
+
+      final TupleTag<String> streamsTag = new TupleTag<String>();
+      LOG.info(streamsTag.toString());
+      final TupleTag<String> usersTag = new TupleTag<String>();
+      KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
+          .of(streamsTag, streams)
+          .and(usersTag, users);
+
+
+      PCollection<KV<String, CoGbkResult>> streamsUsersGroupBy = coGbkInput
+        .apply("CoGroupByUserId", CoGroupByKey.<String>create());
+
+      PCollection<KV<String, String>> streamsUsers = streamsUsersGroupBy
+        .apply(ParDo.named("groupStreamsUsers").of(
+          new DoFn<KV<String, CoGbkResult>, KV<String, String>>() {
+            @Override
+            public void processElement(ProcessContext c) {
+              try {
+                String userString = c.element().getValue().getOnly(usersTag).toString(); 
+                //LOG.info(userString.toString());
+                StreamData user = mapper.readValue(userString, StreamData.class);
+                
+                JsonNode uRoot = mapper.readTree(userString);
+                userString = mapper.writeValueAsString(user);
+
+                String streamValue = c.element().getValue().getAll(streamsTag).toString();
+                List<StreamData> streams = mapper.readValue(streamValue, new TypeReference<List<StreamData>>(){});
+                for (int i = 0; i < streams.size(); i++) {
+                  StreamData stream = streams.get(i);
+                  JsonNode streamJson = mapper.readTree(mapper.writeValueAsString(stream));
+                  ((ObjectNode) streamJson).put("access",uRoot.get("access").asText());
+                  ((ObjectNode) streamJson).put("birth_year",uRoot.get("birth_year").asText());
+                  ((ObjectNode) streamJson).put("country",uRoot.get("country").asText());
+                  ((ObjectNode) streamJson).put("gender",uRoot.get("gender").asText());
+                  ((ObjectNode) streamJson).put("partner",uRoot.get("partner").asText());
+                  ((ObjectNode) streamJson).put("referral",uRoot.get("referral").asText());
+                  ((ObjectNode) streamJson).put("region",uRoot.get("region").asText());
+                  ((ObjectNode) streamJson).put("type",uRoot.get("type").asText());
+                  ((ObjectNode) streamJson).put("zip_code",uRoot.get("zip_code").asText());
+                  String key = streamJson.get("track_id").asText(); 
+                  c.output(KV.of(key,mapper.writeValueAsString(streamJson)));
+                }
+                
+              }
+              catch (IOException e) {
+                LOG.info(c.toString());
+                LOG.info(e.toString());
+              }
+            }
+          }
+        )
+      );
+      return streamsUsers;
+    }
+  }
+
   public static void main(String[] args) throws Exception {
-    DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
+    //DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
+    DirectPipelineOptions options = PipelineOptionsFactory.as(DirectPipelineOptions.class);
 
     // Set options for the Dataflow Pipeline
-    options.setRunner(DataflowPipelineRunner.class);
+    //options.setRunner(DataflowPipelineRunner.class);
+    options.setRunner(DirectPipelineRunner.class);
     options.setProject("spotify-feed-merge");
-    options.setStagingLocation("gs://sfm-staging");
+    //options.setStagingLocation("gs://sfm-staging");
 
     // Create the pipeline and set a registry.
     Pipeline pipeline = Pipeline.create(options);
@@ -291,15 +267,13 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> streams = pipeline
       .apply(new ReadStreams());
 
-    PCollection<KV<String, String>> tracks = pipeline
-      .apply(new ReadTracks());
+    PCollection<KV<String, String>> users = streams
+      .apply(new ReadUsers()); 
 
-    PCollection<KV<String, String>> users = pipeline
-      .apply(new ReadUsers());
+    PCollectionList<KV<String, String>> list = PCollectionList.of(streams).and(users);
 
-    //PCollection<String> kvs = pipeline
-    //    .apply(new ReadStreams(tracks));
-
+    list
+      .apply(new TransformStreamsUsers());
     //  kvs
     //    .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
 
