@@ -61,58 +61,6 @@ public class SpotifyFeedMerge {
 
   }
 
-  /*
-
-      final TupleTag<String> tracksTag = new TupleTag<String>();
-      final TupleTag<String> suTag= new TupleTag<String>();
-      KeyedPCollectionTuple<String> coGetbkInput = KeyedPCollectionTuple
-        .of(suTag, streamsUsers)
-        .and(tracksTag, this.tracks);
-
-      PCollection<KV<String, CoGbkResult>> streamsTracksGroupBy = coGetbkInput
-        .apply("CoGroupByTrackId", CoGroupByKey.<String>create());
-      
-      PCollection<String> streamsTracks = streamsTracksGroupBy 
-        .apply(ParDo.named("streamsTracks").of(
-          new DoFn<KV<String, CoGbkResult>, String>() {
-            @Override
-            public void processElement(ProcessContext c) {
-              try {
-                String streamValue = c.element().getValue().getAll(suTag).toString();
-                List<StreamData> streams = mapper.readValue(streamValue, new TypeReference<List<StreamData>>(){});
-                for (int i = 0; i < streams.size(); i++) {
-                  String streamString = mapper.writeValueAsString(streams.get(i));
-                  StreamData stream = mapper.readValue(streamString, StreamData.class);
-                  JsonNode streamJson = mapper.readTree(streamString);
-                  String trackValue = c.element().getValue().getAll(tracksTag).toString();
-                  //LOG.info("\n\n\ntrackValue\n\n\n"+trackValue);
-                  List<StreamData> tracks = mapper.readValue(trackValue, new TypeReference<List<StreamData>>(){}); 
-                  for (int j = 0; j < tracks.size(); j++) {
-                    String trackString = mapper.writeValueAsString(tracks.get(j));
-                    StreamData track = mapper.readValue(trackString, StreamData.class);
-                    JsonNode trackJson = mapper.readTree(trackString);
-                    //LOG.info("\n\n\nstreamJson\n\n\n"+mapper.writeValueAsString(streamJson));
-                    //LOG.info("\n\n\ntrackJson\n\n\n"+mapper.writeValueAsString(trackJson));
-                    ((ObjectNode) streamJson).put("album_code",trackJson.get("album_code").asText());
-                    ((ObjectNode) streamJson).put("isrc",trackJson.get("isrc").asText());
-                    String key = c.element().getKey();
-                    c.output(mapper.writeValueAsString(streamJson));
-                  }
-                }
-              }
-              catch (IOException e) {
-                LOG.info(e.toString());
-              }
-            }
-          }
-        ));
-
-    
-      return streamsTracks; 
-    }
-  }
-  */
-
   public static class ReadTracks
     extends PTransform<PInput, PCollection<KV<String, String>>> {
 
@@ -184,24 +132,80 @@ public class SpotifyFeedMerge {
     }
   }
 
+
+  public static class TransformStreamsTracks
+    extends PTransform<PCollectionList<KV<String, String>>, PCollection<String>> {
+
+    public PCollection<String> apply(PCollectionList<KV<String, String>>input) {
+      ObjectMapper mapper = new ObjectMapper();
+      Pipeline p = input.getPipeline();
+
+      PCollection<KV<String, String>> streams = input.get(0);
+      PCollection<KV<String, String>> tracks= input.get(1);
+  
+      final TupleTag<String> tracksTag = new TupleTag<String>();
+      final TupleTag<String> streamsTag= new TupleTag<String>();
+      KeyedPCollectionTuple<String> coGetbkInput = KeyedPCollectionTuple
+        .of(streamsTag, streams)
+        .and(tracksTag, tracks);
+
+      PCollection<KV<String, CoGbkResult>> streamsTracksGroupBy = coGetbkInput
+        .apply("CoGroupByTrackId", CoGroupByKey.<String>create());
+      
+      PCollection<String> streamsTracks = streamsTracksGroupBy 
+        .apply(ParDo.named("groupStreamsTracks").of(
+          new DoFn<KV<String, CoGbkResult>, String>() {
+            @Override
+            public void processElement(ProcessContext c) {
+              try {
+                String streamValue = c.element().getValue().getAll(streamsTag).toString();
+                List<StreamData> streams = mapper.readValue(streamValue, new TypeReference<List<StreamData>>(){});
+                for (int i = 0; i < streams.size(); i++) {
+                  String streamString = mapper.writeValueAsString(streams.get(i));
+                  StreamData stream = mapper.readValue(streamString, StreamData.class);
+                  JsonNode streamJson = mapper.readTree(streamString);
+                  String trackValue = c.element().getValue().getAll(tracksTag).toString();
+                  //LOG.info("\n\n\ntrackValue\n\n\n"+trackValue);
+                  List<StreamData> tracks = mapper.readValue(trackValue, new TypeReference<List<StreamData>>(){}); 
+                  for (int j = 0; j < tracks.size(); j++) {
+                    String trackString = mapper.writeValueAsString(tracks.get(j));
+                    StreamData track = mapper.readValue(trackString, StreamData.class);
+                    JsonNode trackJson = mapper.readTree(trackString);
+                    //LOG.info("\n\n\nstreamJson\n\n\n"+mapper.writeValueAsString(streamJson));
+                    //LOG.info("\n\n\ntrackJson\n\n\n"+mapper.writeValueAsString(trackJson));
+                    ((ObjectNode) streamJson).put("album_code",trackJson.get("album_code").asText());
+                    ((ObjectNode) streamJson).put("isrc",trackJson.get("isrc").asText());
+                    String key = c.element().getKey();
+                    c.output(mapper.writeValueAsString(streamJson));
+                  }
+                }
+              }
+              catch (IOException e) {
+                LOG.info(e.toString());
+              }
+            }
+          }
+        )
+      );
+      return streamsTracks; 
+    }
+  }
+
   public static class TransformStreamsUsers
     extends PTransform<PCollectionList<KV<String, String>>, PCollection<KV<String, String>>> {
 
     public PCollection<KV<String, String>> apply(PCollectionList<KV<String, String>>input) {
       ObjectMapper mapper = new ObjectMapper();
       Pipeline p = input.getPipeline();
-      KV<String, String> keyValue = KV.of("userid","value"); 
 
       PCollection<KV<String, String>> streams = input.get(0);
       PCollection<KV<String, String>> users = input.get(1);
 
       final TupleTag<String> streamsTag = new TupleTag<String>();
-      LOG.info(streamsTag.toString());
       final TupleTag<String> usersTag = new TupleTag<String>();
       KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
           .of(streamsTag, streams)
           .and(usersTag, users);
-
 
       PCollection<KV<String, CoGbkResult>> streamsUsersGroupBy = coGbkInput
         .apply("CoGroupByUserId", CoGroupByKey.<String>create());
@@ -251,14 +255,14 @@ public class SpotifyFeedMerge {
   }
 
   public static void main(String[] args) throws Exception {
-    //DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
-    DirectPipelineOptions options = PipelineOptionsFactory.as(DirectPipelineOptions.class);
+    DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
+    //DirectPipelineOptions options = PipelineOptionsFactory.as(DirectPipelineOptions.class);
 
     // Set options for the Dataflow Pipeline
-    //options.setRunner(DataflowPipelineRunner.class);
-    options.setRunner(DirectPipelineRunner.class);
+    options.setRunner(DataflowPipelineRunner.class);
+    //options.setRunner(DirectPipelineRunner.class);
     options.setProject("spotify-feed-merge");
-    //options.setStagingLocation("gs://sfm-staging");
+    options.setStagingLocation("gs://sfm-staging");
 
     // Create the pipeline and set a registry.
     Pipeline pipeline = Pipeline.create(options);
@@ -267,15 +271,23 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> streams = pipeline
       .apply(new ReadStreams());
 
+    PCollection<KV<String, String>> tracks = streams
+      .apply(new ReadTracks());
+
     PCollection<KV<String, String>> users = streams
       .apply(new ReadUsers()); 
 
     PCollectionList<KV<String, String>> list = PCollectionList.of(streams).and(users);
+    streams = list.apply(new TransformStreamsUsers());
+    LOG.info(streams.toString());
 
-    list
-      .apply(new TransformStreamsUsers());
-    //  kvs
-    //    .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
+    list = PCollectionList.of(streams).and(tracks);
+    PCollection<String> completed = list
+      .apply(new TransformStreamsTracks());
+    completed
+      .apply(TextIO.Write.named("WriteToText")
+                .to("gs://sfm-bucket/merged")
+                .withSuffix(".json"));
 
     pipeline.run();
   }
