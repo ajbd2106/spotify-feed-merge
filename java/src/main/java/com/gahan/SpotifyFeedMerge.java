@@ -229,10 +229,13 @@ public class SpotifyFeedMerge {
   public static class TransformStreamsUsers
     extends PTransform<PInput, PCollection<KV<String, String>>> {
 
-    PCollection<KV<String, String>> streams;
-    PCollection<KV<String, String>> users;
+    PCollection<KV<String, String>> streamsKeyValue;
+    PCollection<KV<String, String>> usersKeyValue;
 
-    public static void TransformStreamsUsers(PCollection<KV<String, String>> streams, PCollection<KV<String, String>> users) {}
+    public TransformStreamsUsers(PCollection<KV<String, String>> streams, PCollection<KV<String, String>> users) {
+      this.streamsKeyValue = streams;
+      this.usersKeyValue = users;
+    }
 
     public PCollection<KV<String, String>> apply(PInput input) {
       ObjectMapper mapper = new ObjectMapper();
@@ -241,8 +244,8 @@ public class SpotifyFeedMerge {
       final TupleTag<String> streamsTag = new TupleTag<String>();
       final TupleTag<String> usersTag = new TupleTag<String>();
       KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
-          .of(streamsTag, streams)
-          .and(usersTag, users);
+          .of(streamsTag, this.streamsKeyValue)
+          .and(usersTag, this.usersKeyValue);
 
       PCollection<KV<String, CoGbkResult>> streamsUsersGroupBy = coGbkInput
           .apply("CoGroupByUserId", CoGroupByKey.<String>create());
@@ -277,6 +280,7 @@ public class SpotifyFeedMerge {
                 }
               }
               catch (IOException e) {
+                LOG.info(c.toString());
                 LOG.info(e.toString());
               }
             }
@@ -308,7 +312,7 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> users = pipeline
       .apply(new ReadUsers());
 
-    streams.apply(new TransformStreamsUsers());
+    streams.apply(new TransformStreamsUsers(streams, users));
 
     //PCollection<String> kvs = pipeline
     //    .apply(new ReadStreams(tracks));
