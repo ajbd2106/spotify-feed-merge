@@ -231,22 +231,26 @@ public class SpotifyFeedMerge {
 
     PCollection<KV<String, String>> users;
 
-    PCollection<KV<String, String>> TransformStreamUsers() {
-      this.users = users;
-    }
+    PCollection<KV<String, String>> TransformStreamUsers(
+      PCollection<KV<String, String>> streams, 
+      PCollection<KV<String, String>> users
+    ) {}
 
+    public PCollection<KV<String, String>> apply(PInput input) {
+      ObjectMapper mapper = new ObjectMapper();
+      Pipeline pipeline = input.getPipeline();
 
       final TupleTag<String> streamsTag = new TupleTag<String>();
       final TupleTag<String> usersTag = new TupleTag<String>();
       KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
-          .of(streamsTag, streamskv)
-          .and(usersTag, userskv);
+          .of(streamsTag, streams)
+          .and(usersTag, users);
 
       PCollection<KV<String, CoGbkResult>> streamsUsersGroupBy = coGbkInput
           .apply("CoGroupByUserId", CoGroupByKey.<String>create());
 
       PCollection<KV<String, String>> streamsUsers = streamsUsersGroupBy
-        .apply(ParDo.named("streamsUsers").of(
+        .apply(ParDo.named("transformStreamsUsers").of(
           new DoFn<KV<String, CoGbkResult>, KV<String, String>>() {
             @Override
             public void processElement(ProcessContext c) {
@@ -279,7 +283,8 @@ public class SpotifyFeedMerge {
               }
             }
           }
-        ));
+        )
+      );
   }
   public static void main(String[] args) throws Exception {
     DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
