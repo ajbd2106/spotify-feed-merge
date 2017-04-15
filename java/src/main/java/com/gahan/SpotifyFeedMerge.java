@@ -243,7 +243,7 @@ public class SpotifyFeedMerge {
       ObjectMapper mapper = new ObjectMapper();
       Pipeline pipeline = input.getPipeline();
 
-      final TupleTag<KV<String, String>> streamsTag = new TupleTag<KV<String, String>>();
+      final TupleTag<String> streamsTag = new TupleTag<String>();
       final TupleTag<String> usersTag = new TupleTag<String>();
       KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
           .of(streamsTag, this.streamsKeyValue)
