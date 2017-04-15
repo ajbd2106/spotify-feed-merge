@@ -229,6 +229,7 @@ public class SpotifyFeedMerge {
   public static class TransformStreamsUsers
     extends PTransform<PInput, PCollection<KV<String, String>>> {
 
+    PCollection<KV<String, String>> streams;
     PCollection<KV<String, String>> users;
 
     PCollection<KV<String, String>> TransformStreamUsers(
@@ -309,6 +310,8 @@ public class SpotifyFeedMerge {
 
     PCollection<KV<String, String>> users = pipeline
       .apply(new ReadUsers());
+
+    streams.apply(new TransformStreamsUsers(streams, users));
 
     //PCollection<String> kvs = pipeline
     //    .apply(new ReadStreams(tracks));
