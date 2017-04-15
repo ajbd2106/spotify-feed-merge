@@ -1,64 +1,24 @@
 package com.gahan;
 
-import com.google.cloud.dataflow.sdk.Pipeline;
-import com.google.cloud.dataflow.sdk.coders.Coder;
-import com.google.cloud.dataflow.sdk.coders.KvCoder;
-import com.google.cloud.dataflow.sdk.coders.StringDelegateCoder;
-import com.google.cloud.dataflow.sdk.coders.StringUtf8Coder;
-import com.google.cloud.dataflow.sdk.io.TextIO;
-import com.google.cloud.dataflow.sdk.options.DataflowPipelineOptions;
-import com.google.cloud.dataflow.sdk.options.Default;
-import com.google.cloud.dataflow.sdk.options.Description;
-import com.google.cloud.dataflow.sdk.options.DirectPipelineOptions;
-import com.google.cloud.dataflow.sdk.options.PipelineOptions;
-import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
-import com.google.cloud.dataflow.sdk.options.Validation;
-import com.google.cloud.dataflow.sdk.runners.DataflowPipelineRunner;
-import com.google.cloud.dataflow.sdk.runners.DirectPipelineRunner;
-import com.google.cloud.dataflow.sdk.transforms.Count;
-import com.google.cloud.dataflow.sdk.transforms.DoFn;
-import com.google.cloud.dataflow.sdk.transforms.Flatten;
-import com.google.cloud.dataflow.sdk.transforms.Flatten.FlattenIterables;
-import com.google.cloud.dataflow.sdk.transforms.Keys;
-import com.google.cloud.dataflow.sdk.transforms.PTransform;
-import com.google.cloud.dataflow.sdk.transforms.ParDo;
-import com.google.cloud.dataflow.sdk.transforms.RemoveDuplicates;
-import com.google.cloud.dataflow.sdk.transforms.Values;
-import com.google.cloud.dataflow.sdk.transforms.View;
-import com.google.cloud.dataflow.sdk.transforms.WithKeys;
-import com.google.cloud.dataflow.sdk.transforms.join.CoGbkResult;
-import com.google.cloud.dataflow.sdk.transforms.join.CoGroupByKey;
-import com.google.cloud.dataflow.sdk.transforms.join.KeyedPCollectionTuple;
-import com.google.cloud.dataflow.sdk.util.GcsUtil;
-import com.google.cloud.dataflow.sdk.util.gcsfs.GcsPath;
-import com.google.cloud.dataflow.sdk.values.KV;
-import com.google.cloud.dataflow.sdk.values.PCollection;
-import com.google.cloud.dataflow.sdk.values.PCollectionList;
-import com.google.cloud.dataflow.sdk.values.PCollectionView;
-import com.google.cloud.dataflow.sdk.values.PDone;
-import com.google.cloud.dataflow.sdk.values.PInput;
-import com.google.cloud.dataflow.sdk.values.TupleTag;
+import com.google.cloud.dataflow.sdk.*;
+import com.google.cloud.dataflow.sdk.coders.*;
+import com.google.cloud.dataflow.sdk.io.*;
+import com.google.cloud.dataflow.sdk.options.*;
+import com.google.cloud.dataflow.sdk.runners.*;
+import com.google.cloud.dataflow.sdk.transforms.*;
+import com.google.cloud.dataflow.sdk.transforms.display.*;
+import com.google.cloud.dataflow.sdk.transforms.*;
+import com.google.cloud.dataflow.sdk.transforms.join.*;
+import com.google.cloud.dataflow.sdk.values.*;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.*;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 public class SpotifyFeedMerge {
   private static final Logger LOG = LoggerFactory.getLogger(SpotifyFeedMerge.class);
@@ -229,10 +189,14 @@ public class SpotifyFeedMerge {
   public static class TransformStreamsUsers
     extends PTransform<PInput, PCollection<KV<String, String>>> {
 
-    PCollection<KV<String, String>> streams;
-    PCollection<KV<String, String>> users;
-
     public PCollection<KV<String, String>> apply(PInput input) {
+      Pipeline p = input.getPipeline();
+      KV<String, String> keyValue = KV.of("userid","value"); 
+      PCollection<KV<String, String>> returnCollection = p.apply(Create.of(keyValue)); 
+      return returnCollection;
+    }
+
+    /*(public PCollection<KV<String, String>> apply(PInput input) {
       ObjectMapper mapper = new ObjectMapper();
       Pipeline pipeline = input.getPipeline();
 
@@ -289,9 +253,9 @@ public class SpotifyFeedMerge {
         )
       );
       //return streamsUsers;
-      */
       return this.streams;
     }
+      */
   }
 
   public static void main(String[] args) throws Exception {
@@ -307,19 +271,9 @@ public class SpotifyFeedMerge {
     pipeline.getCoderRegistry().registerCoder(String.class, StringDelegateCoder.of(String.class));
 
     PCollection<KV<String, String>> streams = pipeline
-      .apply(new ReadStreams());
-      //.apply(new ReadTracks());
-
-    //PCollection<KV<String, String>> tracks = streams 
-
-    PCollection<KV<String, String>> users = streams 
-      .apply(new ReadUsers());
-
-    streams.apply(new TransformStreamsUsers());
-
-    //PCollection<String> kvs = pipeline
-    //    .apply(new ReadStreams(tracks));
-
+      .apply(new ReadStreams())
+      .apply(new ReadUsers()) 
+      .apply(new TransformStreamsUsers());
     //  kvs
     //    .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
 
