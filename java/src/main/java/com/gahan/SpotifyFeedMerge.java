@@ -234,19 +234,21 @@ public class SpotifyFeedMerge {
 
     public TransformStreamsUsers(PCollection<KV<String, String>> streams, PCollection<KV<String, String>> users) {
       this.streamsKeyValue = streams;
+      LOG.info(streams.toString());
       this.usersKeyValue = users;
+      LOG.info(users.toString());
     }
 
     public PCollection<KV<String, String>> apply(PInput input) {
       ObjectMapper mapper = new ObjectMapper();
       Pipeline pipeline = input.getPipeline();
 
-      final TupleTag<String> streamsTag = new TupleTag<String>();
+      final TupleTag<KV<String, String>> streamsTag = new TupleTag<KV<String, String>>();
       final TupleTag<String> usersTag = new TupleTag<String>();
       KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
           .of(streamsTag, this.streamsKeyValue)
           .and(usersTag, this.usersKeyValue);
-
+      /*
       PCollection<KV<String, CoGbkResult>> streamsUsersGroupBy = coGbkInput
           .apply("CoGroupByUserId", CoGroupByKey.<String>create());
 
@@ -280,6 +282,7 @@ public class SpotifyFeedMerge {
                 }
               }
               catch (IOException e) {
+                System.out.println("\n\n\nThis is an IOException.\n\n\n");
                 LOG.info(c.toString());
                 LOG.info(e.toString());
               }
@@ -288,6 +291,8 @@ public class SpotifyFeedMerge {
         )
       );
       return streamsUsers;
+      */
+      return this.streamsKeyValue;
     }
   }
 
@@ -305,9 +310,9 @@ public class SpotifyFeedMerge {
 
     PCollection<KV<String, String>> streams = pipeline
       .apply(new ReadStreams());
+      //.apply(new ReadTracks());
 
-    PCollection<KV<String, String>> tracks = pipeline
-      .apply(new ReadTracks());
+    //PCollection<KV<String, String>> tracks = streams 
 
     PCollection<KV<String, String>> users = pipeline
       .apply(new ReadUsers());
