@@ -255,14 +255,14 @@ public class SpotifyFeedMerge {
   }
 
   public static void main(String[] args) throws Exception {
-    //DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
-    DirectPipelineOptions options = PipelineOptionsFactory.as(DirectPipelineOptions.class);
+    DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
+    //DirectPipelineOptions options = PipelineOptionsFactory.as(DirectPipelineOptions.class);
 
     // Set options for the Dataflow Pipeline
-    //options.setRunner(DataflowPipelineRunner.class);
-    options.setRunner(DirectPipelineRunner.class);
+    options.setRunner(DataflowPipelineRunner.class);
+    //options.setRunner(DirectPipelineRunner.class);
     options.setProject("spotify-feed-merge");
-    //options.setStagingLocation("gs://sfm-staging");
+    options.setStagingLocation("gs://sfm-staging");
 
     // Create the pipeline and set a registry.
     Pipeline pipeline = Pipeline.create(options);
@@ -283,7 +283,8 @@ public class SpotifyFeedMerge {
 
     list = PCollectionList.of(streams).and(tracks);
     PCollection<String> completed = list
-      .apply(new TransformStreamsTracks())
+      .apply(new TransformStreamsTracks());
+    completed
       .apply(TextIO.Write.named("WriteToText")
                 .to("gs://sfm-bucket/merged")
                 .withSuffix(".json"));
