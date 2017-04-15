@@ -202,41 +202,22 @@ public class SpotifyFeedMerge {
           .of(streamsTag, streams)
           .and(usersTag, users);
 
-      LOG.info(p.toString());
-      LOG.info(keyValue.toString());
-      PCollection<KV<String, String>> returnCollection = p.apply(Create.of(keyValue)); 
-      LOG.info(returnCollection.toString());
-      return returnCollection;
-    }
 
-    /*(public PCollection<KV<String, String>> apply(PInput input) {
-      ObjectMapper mapper = new ObjectMapper();
-      Pipeline pipeline = input.getPipeline();
-
-      LOG.info(pipeline.toString());
-
-      /*final TupleTag<String> streamsTag = new TupleTag<String>();
-      final TupleTag<String> usersTag = new TupleTag<String>();
-      KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
-          .of(streamsTag, streams)
-          .and(usersTag, users);
       PCollection<KV<String, CoGbkResult>> streamsUsersGroupBy = coGbkInput
-          .apply("CoGroupByUserId", CoGroupByKey.<String>create());
+        .apply("CoGroupByUserId", CoGroupByKey.<String>create());
 
-      /*
       PCollection<KV<String, String>> streamsUsers = streamsUsersGroupBy
         .apply(ParDo.named("groupStreamsUsers").of(
           new DoFn<KV<String, CoGbkResult>, KV<String, String>>() {
             @Override
             public void processElement(ProcessContext c) {
-              //try {
-              //LOG.info(c.element().toString());
-                //String userString = c.element().getValue().getOnly(usersTag).toString(); 
+              try {
+                String userString = c.element().getValue().getOnly(usersTag).toString(); 
                 //LOG.info(userString.toString());
-                //StreamData user = mapper.readValue(userString, StreamData.class);
-                /*
+                StreamData user = mapper.readValue(userString, StreamData.class);
+                
                 JsonNode uRoot = mapper.readTree(userString);
-                String userString = mapper.writeValueAsString(user);
+                userString = mapper.writeValueAsString(user);
 
                 String streamValue = c.element().getValue().getAll(streamsTag).toString();
                 List<StreamData> streams = mapper.readValue(streamValue, new TypeReference<List<StreamData>>(){});
@@ -255,20 +236,18 @@ public class SpotifyFeedMerge {
                   String key = streamJson.get("track_id").asText(); 
                   c.output(KV.of(key,mapper.writeValueAsString(streamJson)));
                 }
-                */
-              //}
-              //catch (IOException e) {
-               // LOG.info(c.toString());
-                //LOG.info(e.toString());
-              /*}
+                
+              }
+              catch (IOException e) {
+                LOG.info(c.toString());
+                LOG.info(e.toString());
+              }
             }
           }
         )
       );
-      //return streamsUsers;
-      return this.streams;
+      return streamsUsers;
     }
-      */
   }
 
   public static void main(String[] args) throws Exception {
