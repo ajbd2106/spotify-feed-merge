@@ -6,8 +6,6 @@ import com.google.cloud.dataflow.sdk.io.*;
 import com.google.cloud.dataflow.sdk.options.*;
 import com.google.cloud.dataflow.sdk.runners.*;
 import com.google.cloud.dataflow.sdk.transforms.*;
-import com.google.cloud.dataflow.sdk.transforms.display.*;
-import com.google.cloud.dataflow.sdk.transforms.*;
 import com.google.cloud.dataflow.sdk.transforms.join.*;
 import com.google.cloud.dataflow.sdk.values.*;
 
@@ -187,12 +185,27 @@ public class SpotifyFeedMerge {
   }
 
   public static class TransformStreamsUsers
-    extends PTransform<PInput, PCollection<KV<String, String>>> {
+    extends PTransform<PCollectionList<KV<String, String>>, PCollection<KV<String, String>>> {
 
-    public PCollection<KV<String, String>> apply(PInput input) {
+    public PCollection<KV<String, String>> apply(PCollectionList<KV<String, String>>input) {
+      ObjectMapper mapper = new ObjectMapper();
       Pipeline p = input.getPipeline();
       KV<String, String> keyValue = KV.of("userid","value"); 
+
+      PCollection<KV<String, String>> streams = input.get(0);
+      PCollection<KV<String, String>> users = input.get(1);
+
+      final TupleTag<String> streamsTag = new TupleTag<String>();
+      LOG.info(streamsTag.toString());
+      final TupleTag<String> usersTag = new TupleTag<String>();
+      KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
+          .of(streamsTag, streams)
+          .and(usersTag, users);
+
+      LOG.info(p.toString());
+      LOG.info(keyValue.toString());
       PCollection<KV<String, String>> returnCollection = p.apply(Create.of(keyValue)); 
+      LOG.info(returnCollection.toString());
       return returnCollection;
     }
 
@@ -259,20 +272,28 @@ public class SpotifyFeedMerge {
   }
 
   public static void main(String[] args) throws Exception {
-    DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
+    //DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
+    DirectPipelineOptions options = PipelineOptionsFactory.as(DirectPipelineOptions.class);
 
     // Set options for the Dataflow Pipeline
-    options.setRunner(DataflowPipelineRunner.class);
+    //options.setRunner(DataflowPipelineRunner.class);
+    options.setRunner(DirectPipelineRunner.class);
     options.setProject("spotify-feed-merge");
-    options.setStagingLocation("gs://sfm-staging");
+    //options.setStagingLocation("gs://sfm-staging");
 
     // Create the pipeline and set a registry.
     Pipeline pipeline = Pipeline.create(options);
     pipeline.getCoderRegistry().registerCoder(String.class, StringDelegateCoder.of(String.class));
 
     PCollection<KV<String, String>> streams = pipeline
-      .apply(new ReadStreams())
-      .apply(new ReadUsers()) 
+      .apply(new ReadStreams());
+
+    PCollection<KV<String, String>> users = streams
+      .apply(new ReadUsers()); 
+
+    PCollectionList<KV<String, String>> list = PCollectionList.of(streams).and(users);
+
+    list
       .apply(new TransformStreamsUsers());
     //  kvs
     //    .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
