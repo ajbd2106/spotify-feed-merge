@@ -109,27 +109,6 @@ public class SpotifyFeedMerge {
 
     PCollection<KV<String, String>> tracks;
 
-      PCollection<String> users = pipeline
-        .apply(TextIO.Read.from("gs://sfm-bucket/users.gz"));
-
-      PCollection<KV<String, String>> userskv = users
-        .apply(ParDo.named("UsersKV").of(
-          new DoFn<String, KV<String, String>>() {
-            @Override
-            public void processElement(ProcessContext c) {
-              try {
-                StreamData usersJson = mapper.readValue(c.element().toString(), StreamData.class);
-                JsonNode userRoot = mapper.readTree(c.element().toString());
-                String key = userRoot.get("user_id").asText();
-                String usersString = mapper.writeValueAsString(userRoot);
-                c.output(KV.of(key, usersString));
-              }
-              catch (IOException e) {
-                LOG.info(e.toString());
-              }
-            }
-          }
-        ));
 
       final TupleTag<String> streamsTag = new TupleTag<String>();
       final TupleTag<String> usersTag = new TupleTag<String>();
@@ -261,6 +240,37 @@ public class SpotifyFeedMerge {
         return tracksKeyValue;
       }
   }
+
+  public static class ReadUsers
+    extends PTransform<PInput, PCollection<KV<String, String>>> {
+
+      public ReadUsers() {}
+
+      public PCollection<KV<String, String>> apply(PInput input) {
+        ObjectMapper mapper = new ObjectMapper();
+        Pipeline pipeline = input.getPipeline();     
+ 
+        PCollection<String> users = pipeline
+          .apply(TextIO.Read.from("gs://sfm-bucket/users.gz"));
+
+      PCollection<KV<String, String>> userskv = users
+        .apply(ParDo.named("UsersKV").of(
+          new DoFn<String, KV<String, String>>() {
+            @Override
+            public void processElement(ProcessContext c) {
+              try {
+                StreamData usersJson = mapper.readValue(c.element().toString(), StreamData.class);
+                JsonNode userRoot = mapper.readTree(c.element().toString());
+                String key = userRoot.get("user_id").asText();
+                String usersString = mapper.writeValueAsString(userRoot);
+                c.output(KV.of(key, usersString));
+              }
+              catch (IOException e) {
+                LOG.info(e.toString());
+              }
+            }
+          }
+        ));
 
   public static void main(String[] args) throws Exception {
     DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
