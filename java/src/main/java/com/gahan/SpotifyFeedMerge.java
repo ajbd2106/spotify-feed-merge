@@ -232,7 +232,7 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> streams;
     PCollection<KV<String, String>> users;
 
-    PCollection<KV<String, String>> TransformStreamsUsers(PCollection<KV<String, String>> streams, PCollection<KV<String, String>> users) {
+    public static void TransformStreamsUsers(PCollection<KV<String, String>> streams, PCollection<KV<String, String>> users) {
       this.streams = streams;
     }
 
