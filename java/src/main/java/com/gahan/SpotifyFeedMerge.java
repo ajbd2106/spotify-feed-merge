@@ -190,18 +190,15 @@ public class SpotifyFeedMerge {
     public PCollection<KV<String, String>> apply(PCollectionList<KV<String, String>>input) {
       ObjectMapper mapper = new ObjectMapper();
       Pipeline p = input.getPipeline();
-      KV<String, String> keyValue = KV.of("userid","value"); 
 
       PCollection<KV<String, String>> streams = input.get(0);
       PCollection<KV<String, String>> users = input.get(1);
 
       final TupleTag<String> streamsTag = new TupleTag<String>();
-      LOG.info(streamsTag.toString());
       final TupleTag<String> usersTag = new TupleTag<String>();
       KeyedPCollectionTuple<String> coGbkInput = KeyedPCollectionTuple
           .of(streamsTag, streams)
           .and(usersTag, users);
-
 
       PCollection<KV<String, CoGbkResult>> streamsUsersGroupBy = coGbkInput
         .apply("CoGroupByUserId", CoGroupByKey.<String>create());
@@ -267,15 +264,18 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> streams = pipeline
       .apply(new ReadStreams());
 
+    PCollection<KV<String, String>> tracks = streams
+      .apply(new ReadTracks());
+
     PCollection<KV<String, String>> users = streams
       .apply(new ReadUsers()); 
 
     PCollectionList<KV<String, String>> list = PCollectionList.of(streams).and(users);
+    streams = list.apply(new TransformStreamsUsers());
+    LOG.info(streams.toString());
 
-    list
-      .apply(new TransformStreamsUsers());
-    //  kvs
-    //    .apply(TextIO.Write.named("WriteIt").to("gs://sfm-bucket/merged").withSuffix(".json"));
+    list = PCollectionList.of(streams).and(tracks);
+    streams = list.apply(new TransformStreamsTracks());
 
     pipeline.run();
   }
