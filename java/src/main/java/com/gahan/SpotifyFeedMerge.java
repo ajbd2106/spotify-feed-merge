@@ -282,7 +282,11 @@ public class SpotifyFeedMerge {
     LOG.info(streams.toString());
 
     list = PCollectionList.of(streams).and(tracks);
-    PCollection<String> completed = list.apply(new TransformStreamsTracks());
+    PCollection<String> completed = list
+      .apply(new TransformStreamsTracks())
+      .apply(TextIO.Write.named("WriteToText")
+                .to("gs://sfm-bucket/merged")
+                .withSuffix(".json"));
 
     pipeline.run();
   }
