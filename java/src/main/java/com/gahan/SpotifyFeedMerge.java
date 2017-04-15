@@ -232,9 +232,7 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> streams;
     PCollection<KV<String, String>> users;
 
-    public static void TransformStreamsUsers(PCollection<KV<String, String>> streams, PCollection<KV<String, String>> users) {
-      this.streams = streams;
-    }
+    public static void TransformStreamsUsers(PCollection<KV<String, String>> streams, PCollection<KV<String, String>> users) {}
 
     public PCollection<KV<String, String>> apply(PInput input) {
       ObjectMapper mapper = new ObjectMapper();
