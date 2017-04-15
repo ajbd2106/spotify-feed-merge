@@ -285,7 +285,10 @@ public class SpotifyFeedMerge {
           }
         )
       );
+      return streamsUsers;
+    }
   }
+
   public static void main(String[] args) throws Exception {
     DataflowPipelineOptions options = PipelineOptionsFactory.as(DataflowPipelineOptions.class);
 
