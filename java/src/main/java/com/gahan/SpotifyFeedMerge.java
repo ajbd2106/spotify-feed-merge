@@ -232,10 +232,9 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> streams;
     PCollection<KV<String, String>> users;
 
-    PCollection<KV<String, String>> TransformStreamUsers(
-      PCollection<KV<String, String>> streams, 
-      PCollection<KV<String, String>> users
-    ) {}
+    PCollection<KV<String, String>> TransformStreamsUsers(PCollection<KV<String, String>> streams, PCollection<KV<String, String>> users) {
+      this.streams = streams;
+    }
 
     public PCollection<KV<String, String>> apply(PInput input) {
       ObjectMapper mapper = new ObjectMapper();
@@ -311,7 +310,7 @@ public class SpotifyFeedMerge {
     PCollection<KV<String, String>> users = pipeline
       .apply(new ReadUsers());
 
-    streams.apply(new TransformStreamsUsers(streams, users));
+    streams.apply(new TransformStreamsUsers());
 
     //PCollection<String> kvs = pipeline
     //    .apply(new ReadStreams(tracks));
