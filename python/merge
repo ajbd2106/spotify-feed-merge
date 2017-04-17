@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
-import apache_beam as ab
 import json
 
 print(__name__)
 
 from apache_beam.pvalue import AsList
 
-import settings
 import tracks
 import users
 
