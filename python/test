@@ -5,3 +5,11 @@ import unittest
 class TestStreamsRead(unittest.TestCase):
     def __init__():
         pass
+
+class TestUsersRead(unittest.TestCase):
+    def __init__():
+        pass
+
+class TestTracksRead(unittest.TestCase):
+    def __init__():
+       pass 
