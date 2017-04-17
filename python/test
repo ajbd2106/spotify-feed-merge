@@ -1,6 +1,18 @@
 #!/usr/bin/env python
 
+import apache_beam
+import create_pipeline
 import unittest
+
+
+class TestCreatePipeline(unittest.TestCase):
+    def __init__(): 
+        pass     
+
+    def test_pipeline_create():
+        pipeline = create_pipeline.CreatePipeline()
+        return pipeline
+    
 
 class TestStreamsRead(unittest.TestCase):
     def __init__():
