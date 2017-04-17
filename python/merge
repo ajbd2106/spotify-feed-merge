@@ -7,15 +7,10 @@ print(__name__)
 
 from apache_beam.pvalue import AsList
 
+import settings
 import tracks
 import users
 
-o = ab.utils.pipeline_options.PipelineOptions()
-gco = o.view_as(ab.utils.pipeline_options.GoogleCloudOptions)
-gco.project = 'umg-technical-evaluation'
-gco.staging_location = 'gs://abbynormal-staging/stage'
-gco.temp_location = 'gs://abbynormal-staging/tmp'
-o.view_as(ab.utils.pipeline_options.StandardOptions).runner = 'DataflowRunner'
 
 p = []
 p = ab.Pipeline(options=o)
