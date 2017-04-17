@@ -2,8 +2,8 @@
 
 import apache_beam
 #import create_pipeline
+import options
 import unittest
-
 
 class TestCreatePipeline(unittest.TestCase):
     def __init__(): 
@@ -14,17 +14,24 @@ class TestCreatePipeline(unittest.TestCase):
         return pipeline
     
 class TestOptions(unittest.TestCase):
-    def __init__():
-        pass
+    def setUp(self):
+        return None 
 
+    def test_set_options(self):
+        test_options = options.SetOptions() 
+        print(options)
+    
 class TestStreamsRead(unittest.TestCase):
-    def __init__():
-        pass
-
-class TestUsersRead(unittest.TestCase):
     def __init__():
         pass
 
 class TestTracksRead(unittest.TestCase):
     def __init__():
        pass 
+
+class TestUsersRead(unittest.TestCase):
+    def __init__():
+        pass
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestOptions)
+unittest.TextTestRunner(verbosity=2).run(suite)

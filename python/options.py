@@ -11,7 +11,7 @@ class SetOptions:
         google_cloud = configobj.get("google_cloud")
         runner = configobj.get("standard").get("runner")
         options = apache_beam.utils.pipeline_options.PipelineOptions()
-        options = set_google_cloud_options(options google_cloud)
+        options = set_google_cloud_options(options, google_cloud)
         options = set_runner(options, runner)
         return options 
 
