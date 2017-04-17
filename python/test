@@ -1,3 +1,7 @@
 #!/usr/bin/env python
 
 import unittest
+
+class TestStreamsRead(unittest.TestCase):
+    def __init__():
+        pass
