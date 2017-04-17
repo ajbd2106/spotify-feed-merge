@@ -6,25 +6,23 @@ import os
 
 
 class SetOptions:
-    project = ""
-    staging = ""
-    temp = ""
-
     def __init__(self):
         config = configobj.ConfigObj(os.getcwd()+"/sfm.conf")
-        dataflow = configobj.get("dataflow")
+        google_cloud = configobj.get("google_cloud")
+        runner = configobj.get("standard").get("runner")
         options = apache_beam.utils.pipeline_options.PipelineOptions()
-        pass
+        options = set_google_cloud_options(options google_cloud)
+        options = set_runner(options, runner)
+        return options 
 
-    def set_google_cloud_options(self, options):
+    def set_google_cloud_options(self, options, google_cloud):
         google_cloud_options = options.view_as(apache_beam.utils.pipelne_options.GoogleCloudOptions) 
-        gco.project = 'umg-technical-evaluation'
-gco.staging_location = 'gs://abbynormal-staging/stage'
-gco.temp_location = 'gs://abbynormal-staging/tmp'
+        google_cloud_options.project = google_cloud.get("project") 
+        google_cloud_options.staging_location = google_cloud.get("staging") 
+        google_cloud_options.temp_location = google_cloud.get("temp") 
         return google_cloud_options
 
-print(config)
-
-o = ab.utils.pipeline_options.PipelineOptions()
-gco = o.view_as(ab.utils.pipeline_options.GoogleCloudOptions)
-o.view_as(ab.utils.pipeline_options.StandardOptions).runner = 'DataflowRunner'
+    def set_runner(self, options, runner):
+        options = options.view_as(ab.utils.pipeline_options.StandardOptions)
+        options.runner = 'DataflowRunner'
+        return options
