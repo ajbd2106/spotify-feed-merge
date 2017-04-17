@@ -13,6 +13,9 @@ class TestCreatePipeline(unittest.TestCase):
         pipeline = create_pipeline.CreatePipeline()
         return pipeline
     
+class TestOptions(unittest.TestCase):
+    def __init__():
+        pass
 
 class TestStreamsRead(unittest.TestCase):
     def __init__():
