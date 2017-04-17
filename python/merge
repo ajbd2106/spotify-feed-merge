@@ -1,42 +1,14 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
-
 import apache_beam as ab
 import json
 
+print(__name__)
+
 from apache_beam.pvalue import AsList
 
-class ProcessUsers(ab.DoFn):
-    def process(self, element):
-        key, values = element
-        users = values.get('users')[0]
-        for k, v in enumerate(values.get('streams')):
-            values.get('streams')[k].update({
-                'product':users.get('product'),
-                'country':users.get('country'),
-                'region':users.get('region'),
-                'zip_code':users.get('zip_code'),
-                'access':users.get('access'),
-                'gender':users.get('gender'),
-                'partner':users.get('partner'),
-                'referral':users.get('referral'),
-                'type':users.get('type'),
-                'birth_year':users.get('birth_year')
-            })
-        # values.get('streams').pop(0)
-        return values.get('streams')
-
-class ProcessTracks(ab.DoFn):
-    def process(self, element):
-        key, values = element
-        tracks = values.get('tracks')[0]
-        for k, v in enumerate(values.get('streams')):
-            values.get('streams')[k].update({
-                'album_code': tracks.get('album_code'),
-                'isrc': tracks.get('isrc')
-            })
-        return values.get('streams') 
+import tracks
+import users
 
 o = ab.utils.pipeline_options.PipelineOptions()
 gco = o.view_as(ab.utils.pipeline_options.GoogleCloudOptions)
