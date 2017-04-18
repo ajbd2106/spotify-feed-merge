@@ -49,7 +49,6 @@ class TestOptions(unittest.TestCase):
         set_pipeline_options = SetPipelineOptions()
         options = set_pipeline_options.set_pipeline() 
         runner = set_pipeline_options.set_runner(options, 'DataflowRunner')
-        runner = None
         self.assertIsInstance(runner, apache_beam.utils.pipeline_options.PipelineOptions)
         
 
@@ -69,11 +68,11 @@ class TestReadStreams(unittest.TestCase):
         rs = ReadStreams()    
         streams = rs.read_streams(self.pipeline)
         self.assertIsInstance(streams, apache_beam.pvalue.PCollection)
-        self.streams = streams
     
     def test_map_streams(self):
         rs = ReadStreams()
-        streams = rs.map_streams(self.streams)
+        streams = rs.read_streams(self.pipeline)
+        streams = rs.map_streams(streams)
         self.assertIsInstance(streams, apache_beam.pvalue.PCollection)
 
 class TestTracksRead(unittest.TestCase):
