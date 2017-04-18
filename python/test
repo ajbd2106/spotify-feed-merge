@@ -6,6 +6,7 @@ import unittest
 
 from create_pipeline import CreatePipeline
 from options import SetPipelineOptions
+from streams import ReadStreams
 
 class TestCreatePipeline(unittest.TestCase):
     def setUp(self): 
@@ -52,16 +53,22 @@ class TestOptions(unittest.TestCase):
         
 
 class TestReadStreams(unittest.TestCase):
+    pipeline = ""
+
     def setUp(self):
         self.options = SetPipelineOptions()
         google_cloud = options.config.get('google_cloud')
         runner = options.config.get('standard').get('runner')
         self.options.pipeline = options.set_pipeline()
         self.options.set_google_cloud_options(google_cloud)
-        self.options.set_runner(
+        options = self.options.set_runner(runner)
+        self.pipeline = CreatePipeline(options=options)
 
     def test_read_streams(self):
-        pass
+        rs = ReadStreams()    
+        streams = rs.read_streams(self.pipeline)
+        print(type(streams))
+        self.assertIsInstance(streams, apache_beam.utils.pipeline_options.PipelineOptions)
     
     def test_map_streams(self):
         pass
@@ -76,10 +83,12 @@ class TestUsersRead(unittest.TestCase):
 
 test_create_pipeline = unittest.TestLoader().loadTestsFromTestCase(TestCreatePipeline)
 test_options = unittest.TestLoader().loadTestsFromTestCase(TestOptions)
+test_streams = unittest.TestLoader().loadTestsFromTestCase(TestReadStreams)
 
 suite = unittest.TestSuite([
     test_create_pipeline,
     test_options,
+    test_streams,
 ])
 results = unittest.TextTestRunner(verbosity=5).run(suite)
 
