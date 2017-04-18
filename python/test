@@ -49,6 +49,7 @@ class TestOptions(unittest.TestCase):
         set_pipeline_options = SetPipelineOptions()
         options = set_pipeline_options.set_pipeline() 
         runner = set_pipeline_options.set_runner(options, 'DataflowRunner')
+        runner = None
         self.assertIsInstance(runner, apache_beam.utils.pipeline_options.PipelineOptions)
         
 
@@ -95,4 +96,4 @@ suite = unittest.TestSuite([
 results = unittest.TextTestRunner(verbosity=5).run(suite)
 
 if len(results.failures) > 0:
-    sys.exit(-1)
+    sys.exit(143)
