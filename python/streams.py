@@ -9,9 +9,8 @@ class ReadStreams:
     streams_path = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
 
     def read_streams(self, pipeline):
-        streams = pipeline | 'read streams path' >> apache_beam.io.ReadFromText(self.streams_path)
         return (pipeline 
-             | 'read streams' >> apache_beam.io.ReadFromText(self.streams)
+             | 'read streams' >> apache_beam.io.ReadFromText(self.streams_path)
         ) 
 
     def map_steams(self, pipeline):
