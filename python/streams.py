@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
 import apache_beam
+import configobj
 
 from options import SetPipelineOptions
 
 class ReadStreams:
-    def __init__(self):
-        pass
+    streams = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
 
-    def read_streams(self, pipeline, options):
+    def read_streams(self, pipeline):
+        print(self.streams)
         return (pipeline 
-             | 'read streams' >> apache_beam.io.ReadFromText(options.streams)
+             | 'read streams' >> apache_beam.io.ReadFromText(self.streams)
         ) 
 
     def map_steams(self, pipeline):
