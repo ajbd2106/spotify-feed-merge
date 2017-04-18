@@ -14,8 +14,9 @@ spo.options = spo.set_pipeline()
 options = spo.set_google_cloud_options(spo.google_cloud, spo.pipeline)
 options = spo.set_runner(spo.options, spo.config.get('standard').get('runner'))
 pipeline = create_pipeline.CreatePipeline(options)
+print(pipeline)
 
-s = (p 
+s = (pipeline 
      | 'read streams' >> ab.io.ReadFromText('gs://abbynormal/streams.gz') 
      | 'map streams' >> ab.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
 )

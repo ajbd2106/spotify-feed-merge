@@ -9,8 +9,7 @@ class SetPipelineOptions():
     options = apache_beam.utils.pipeline_options.PipelineOptions
 
     def __init__(self):
-        init_config = SetPipelineOptions.config
-        self.google_cloud = init_config.get("google_cloud")
+        self.google_cloud = SetPipelineOptions.config.get("google_cloud")
         self.runner = SetPipelineOptions.config.get('standard').get('runner')
 
     def set_google_cloud_options(self, google_cloud, pipeline):
