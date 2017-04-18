@@ -1,0 +1,9 @@
+---
+version: '2'
+services:
+  python:
+    build: python 
+    volumes:
+     - .:/python
+...
+# vim: ft=ansible:
