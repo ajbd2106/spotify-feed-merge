@@ -56,13 +56,13 @@ class TestReadStreams(unittest.TestCase):
     pipeline = ""
 
     def setUp(self):
-        self.options = SetPipelineOptions()
+        options = SetPipelineOptions()
         google_cloud = options.config.get('google_cloud')
         runner = options.config.get('standard').get('runner')
-        self.options.pipeline = options.set_pipeline()
-        self.options.set_google_cloud_options(google_cloud)
-        options = self.options.set_runner(runner)
-        self.pipeline = CreatePipeline(options=options)
+        options.pipeline = options.set_pipeline()
+        options.set_google_cloud_options(google_cloud, options.pipeline)
+        options = options.set_runner(options.pipeline, runner)
+        self.pipeline = CreatePipeline(options=options).pipeline
 
     def test_read_streams(self):
         rs = ReadStreams()    
