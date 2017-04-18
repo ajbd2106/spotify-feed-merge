@@ -7,6 +7,9 @@ import os
 class SetPipelineOptions():
     config = configobj.ConfigObj(os.getcwd()+"/sfm.conf")
     options = apache_beam.utils.pipeline_options.PipelineOptions
+    streams = SetPipelineOptions.config.get('standard').get('streams')
+    tracks = SetPipelineOptions.config.get('standard').get('tracks')
+    users = SetPipelineOptions.config.get('standard').get('users')
 
     def __init__(self):
         self.google_cloud = SetPipelineOptions.config.get("google_cloud")
