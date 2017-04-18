@@ -6,10 +6,10 @@ import configobj
 from options import SetPipelineOptions
 
 class ReadStreams:
-    streams = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
+    streams_path = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
 
     def read_streams(self, pipeline):
-        print(self.streams)
+        streams = pipeline | 'read streams path' >> apache_beam.io.ReadFromText(self.streams_path)
         return (pipeline 
              | 'read streams' >> apache_beam.io.ReadFromText(self.streams)
         ) 

@@ -13,15 +13,16 @@ spo = SetPipelineOptions()
 spo.options = spo.set_pipeline()
 options = spo.set_google_cloud_options(spo.google_cloud, spo.options)
 options = spo.set_runner(spo.options, spo.config.get('standard').get('runner'))
-pipeline = CreatePipeline(options)
+pipeline = CreatePipeline(options).pipeline
 
 read_streams = streams.ReadStreams()
+
+print(pipeline)
 
 streams = read_streams.read_streams(pipeline)
 
 print(streams)
 
-print(pipeline)
 
 """
 u = (p
