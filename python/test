@@ -34,8 +34,9 @@ class TestOptions(unittest.TestCase):
         self.assertIsInstance(pipeline, apache_beam.utils.pipeline_options.PipelineOptions)
 
     def test_set_runner(self):
-        options = SetPipelineOptions()
-        runner = options.set_runner(options, 'DataflowRunner')
+        set_pipeline_options = SetPipelineOptions()
+        options = set_pipeline_options.set_pipeline() 
+        runner = set_pipeline_options.set_runner(options, 'DataflowRunner')
         self.assertIsInstance(runner, apache_beam.utils.pipeline_options.PipelineOptions)
         
 

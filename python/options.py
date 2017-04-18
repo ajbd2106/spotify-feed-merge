@@ -6,6 +6,7 @@ import os
 
 class SetPipelineOptions():
     config = configobj.ConfigObj(os.getcwd()+"/sfm.conf")
+    options = apache_beam.utils.pipeline_options.PipelineOptions
 
     def __init__(self):
         init_config = SetPipelineOptions.config
@@ -23,6 +24,6 @@ class SetPipelineOptions():
         return apache_beam.utils.pipeline_options.PipelineOptions()
 
     def set_runner(self, options, runner):
-        options = options.view_as(ab.utils.pipeline_options.StandardOptions)
-        options.runner = 'DataflowRunner'
+        options = options.view_as(apache_beam.utils.pipeline_options.StandardOptions)
+        options.runner = runner 
         return options
