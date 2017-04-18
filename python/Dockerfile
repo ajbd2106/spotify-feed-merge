@@ -5,5 +5,6 @@ RUN ansible -m lineinfile -a 'line="localhost ansible_connection=local" dest=/et
 RUN python /tmp/get-pip.py
 ADD . /src
 RUN ansible-playbook /src/build/python.yml
+RUN ansible-playbook /src/build/google.yml
 WORKDIR /src
 RUN ./test
