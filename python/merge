@@ -16,10 +16,6 @@ options = spo.set_runner(spo.options, spo.config.get('standard').get('runner'))
 pipeline = create_pipeline.CreatePipeline(options)
 print(pipeline)
 
-s = (pipeline 
-     | 'read streams' >> ab.io.ReadFromText('gs://abbynormal/streams.gz') 
-     | 'map streams' >> ab.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
-)
 
 u = (p
      | 'read users' >> ab.io.ReadFromText('gs://abbynormal/users.gz')
