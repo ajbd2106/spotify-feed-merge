@@ -2,13 +2,14 @@
 
 import json
 
-from apache_beam.pvalue import AsList
-
 import create_pipeline
+import options
 import streams
 import tracks
 import users
 
+
+pipeline_options = options.SetOptions()
 pipeline = create_pipeline.CreatePipeline(options)
 
 s = (p 
