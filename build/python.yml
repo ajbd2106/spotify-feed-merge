@@ -1,0 +1,7 @@
+---
+- name: Install dependencies for Python execution.
+  hosts: localhost
+  tasks:
+    debug:
+      msg: "It's something."
+...
