@@ -4,7 +4,6 @@ RUN apt-get -y update; apt-get -y upgrade; apt-get -y install ansible; ansible -
 RUN ansible -m lineinfile -a 'line="localhost ansible_connection=local" dest=/etc/ansible/hosts create=yes state=present' localhost
 RUN python /tmp/get-pip.py
 ADD . /src
-RUN ls -lah /src
 RUN ansible-playbook /src/build/python.yml
-WORKDIR /src/python
+WORKDIR /src
 RUN ./test
