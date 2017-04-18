@@ -2,8 +2,12 @@
 - name: Install dependencies for Python execution.
   hosts: localhost
   tasks:
-  - debug:
-      msg: "It's something."
+  - name: Install apt dependencies.
+    apt:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - apt-transport-https
   - name: Install pip dependencies. 
     pip:
       name: "{{ item }}"
@@ -12,3 +16,4 @@
     - apache_beam
     - configobj
 ...
+# vim: ft=ansible:
