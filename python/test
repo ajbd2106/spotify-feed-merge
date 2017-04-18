@@ -7,12 +7,12 @@ import unittest
 from options import SetPipelineOptions
 
 class TestCreatePipeline(unittest.TestCase):
-    def __init__(): 
-        pass     
+    def setUp(self): 
+        return None
 
-    def test_pipeline_create():
-        pipeline = create_pipeline.CreatePipeline()
-        return pipeline
+    def test_pipeline_create(self):
+        pipeline = apache_beam.Pipeline()
+        self.assertIsInstance(pipeline, apache_beam.Pipeline) 
     
 class TestOptions(unittest.TestCase):
     def setUp(self):
@@ -52,5 +52,11 @@ class TestUsersRead(unittest.TestCase):
     def __init__():
         pass
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestOptions)
+test_create_pipeline = unittest.TestLoader().loadTestsFromTestCase(TestCreatePipeline)
+test_options = unittest.TestLoader().loadTestsFromTestCase(TestOptions)
+
+suite = unittest.TestSuite([
+    test_create_pipeline,
+    test_options,
+])
 unittest.TextTestRunner(verbosity=5).run(suite)
