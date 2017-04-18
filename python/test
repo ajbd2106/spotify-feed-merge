@@ -2,8 +2,9 @@
 
 import apache_beam
 #import create_pipeline
-import options
 import unittest
+
+from options import SetPipelineOptions
 
 class TestCreatePipeline(unittest.TestCase):
     def __init__(): 
@@ -18,8 +19,8 @@ class TestOptions(unittest.TestCase):
         return None 
 
     def test_set_options(self):
-        test_options = options.SetPipelineOptions() 
-        print(options)
+        options = SetPipelineOptions() 
+        self.assertIsInstance(options, apache_beam.utils.pipeline_options.PipelineOptions)
     
 class TestStreamsRead(unittest.TestCase):
     def __init__():
