@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import apache_beam
+
 class ProcessTracks(ab.DoFn):
     def process(self, element):
         key, values = element
