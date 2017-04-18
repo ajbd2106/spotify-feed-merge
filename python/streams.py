@@ -13,7 +13,7 @@ class ReadStreams:
              | 'read streams' >> apache_beam.io.ReadFromText(self.streams_path)
         ) 
 
-    def map_steams(self, pipeline):
+    def map_streams(self, pipeline):
         return (pipeline
              | 'map streams' >> apache_beam.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
         )

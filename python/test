@@ -51,8 +51,19 @@ class TestOptions(unittest.TestCase):
         self.assertIsInstance(runner, apache_beam.utils.pipeline_options.PipelineOptions)
         
 
-class TestStreamsRead(unittest.TestCase):
-    def __init__():
+class TestReadStreams(unittest.TestCase):
+    def setUp(self):
+        self.options = SetPipelineOptions()
+        google_cloud = options.config.get('google_cloud')
+        runner = options.config.get('standard').get('runner')
+        self.options.pipeline = options.set_pipeline()
+        self.options.set_google_cloud_options(google_cloud)
+        self.options.set_runner(
+
+    def test_read_streams(self):
+        pass
+    
+    def test_map_streams(self):
         pass
 
 class TestTracksRead(unittest.TestCase):

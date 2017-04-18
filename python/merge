@@ -20,6 +20,7 @@ read_streams = streams.ReadStreams()
 print(pipeline)
 
 streams = read_streams.read_streams(pipeline)
+streams = read_streams.map_streams(streams)
 
 print(streams)
 
