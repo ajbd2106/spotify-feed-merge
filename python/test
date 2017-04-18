@@ -22,7 +22,6 @@ class TestCreatePipeline(unittest.TestCase):
         spo.set_google_cloud_options(google_cloud, spo.options)
         options = spo.set_runner(spo.options, spo.config.get('standard').get('runner')) 
         pipeline = CreatePipeline(options=options)
-        pipeline = None
         self.assertIsInstance(pipeline, apache_beam.Pipeline)
         
     
