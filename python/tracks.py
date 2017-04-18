@@ -2,7 +2,7 @@
 
 import apache_beam
 
-class ProcessTracks(ab.DoFn):
+class ProcessTracks(apache_beam.DoFn):
     def process(self, element):
         key, values = element
         tracks = values.get('tracks')[0]

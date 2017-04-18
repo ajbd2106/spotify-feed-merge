@@ -2,27 +2,28 @@
 
 import json
 
-#import create_pipeline
 import streams
 import tracks
 import users
 
+from create_pipeline import CreatePipeline
 from options import SetPipelineOptions
 
 spo = SetPipelineOptions()
 spo.options = spo.set_pipeline()
-options = spo.set_google_cloud_options(spo.google_cloud, spo.pipeline)
+options = spo.set_google_cloud_options(spo.google_cloud, spo.options)
 options = spo.set_runner(spo.options, spo.config.get('standard').get('runner'))
-pipeline = create_pipeline.CreatePipeline(options)
+pipeline = CreatePipeline(options)
 
 read_streams = streams.ReadStreams()
 
 streams = read_streams.read_streams(pipeline)
+
 print(streams)
 
 print(pipeline)
 
-
+"""
 u = (p
      | 'read users' >> ab.io.ReadFromText('gs://abbynormal/users.gz')
      | 'map users' >> ab.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
@@ -42,3 +43,4 @@ s = s | 'process tracks' >> ab.ParDo(ProcessTracks())
 s = s | 'output' >> ab.io.WriteToText('gs://abbynormal/dnormal')
 
 p.run()
+"""
