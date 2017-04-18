@@ -2,13 +2,15 @@
 
 import apache_beam
 
+from options import SetPipelineOptions
+
 class ReadStreams:
     def __init__(self):
         pass
 
-    def read_streams(self, pipeline):
+    def read_streams(self, pipeline, options):
         return (pipeline 
-             | 'read streams' >> apache_beam.io.ReadFromText('gs://abbynormal/streams.gz')
+             | 'read streams' >> apache_beam.io.ReadFromText(options.streams)
         ) 
 
     def map_steams(self, pipeline):

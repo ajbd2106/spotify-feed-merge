@@ -17,7 +17,7 @@ pipeline = CreatePipeline(options)
 
 read_streams = streams.ReadStreams()
 
-streams = read_streams.read_streams(pipeline)
+streams = read_streams.read_streams(pipeline, options)
 
 print(streams)
 
