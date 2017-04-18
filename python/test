@@ -25,8 +25,9 @@ class TestOptions(unittest.TestCase):
     def test_set_google_cloud_options(self):
         gco = SetPipelineOptions()
         google_cloud = gco.config.get("google_cloud")
-        gco.set_google_cloud_options(google_cloud, gco.set_pipeline)
-        self.assertIsInstance(gco, apache_beam.utils.pipeline_options.GoogleCloudOptions)
+        gco.pipeline = gco.set_pipeline()
+        results = gco.set_google_cloud_options(google_cloud, gco.pipeline)
+        self.assertIsInstance(results, apache_beam.utils.pipeline_options.GoogleCloudOptions)
 
     def test_set_pipeline(self): 
         pipeline = SetPipelineOptions().set_pipeline() 

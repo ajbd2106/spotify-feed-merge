@@ -20,7 +20,7 @@ class SetPipelineOptions():
         return options 
 
     def set_pipeline(self):
-        return apache_beam.utils.pipeline_options.PipelineOptions
+        return apache_beam.utils.pipeline_options.PipelineOptions()
 
     def set_runner(self, options, runner):
         options = options.view_as(ab.utils.pipeline_options.StandardOptions)
