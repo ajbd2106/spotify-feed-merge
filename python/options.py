@@ -11,7 +11,7 @@ class SetPipelineOptions():
     def __init__(self):
         init_config = SetPipelineOptions.config
         self.google_cloud = init_config.get("google_cloud")
-        self.standard = init_config.get("standard")
+        self.runner = SetPipelineOptions.config.get('standard').get('runner')
 
     def set_google_cloud_options(self, google_cloud, pipeline):
         options = pipeline.view_as(apache_beam.utils.pipeline_options.GoogleCloudOptions) 

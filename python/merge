@@ -2,14 +2,17 @@
 
 import json
 
-import create_pipeline
-import options
+#import create_pipeline
 import streams
 import tracks
 import users
 
+from options import SetPipelineOptions
 
-pipeline_options = options.SetOptions()
+spo = SetPipelineOptions()
+spo.options = spo.set_pipeline()
+options = spo.set_google_cloud_options(spo.google_cloud, spo.pipeline)
+options = spo.set_runner(spo.options, spo.config.get('standard').get('runner'))
 pipeline = create_pipeline.CreatePipeline(options)
 
 s = (p 
