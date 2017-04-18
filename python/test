@@ -18,7 +18,7 @@ class TestOptions(unittest.TestCase):
         return None 
 
     def test_set_options(self):
-        test_options = options.SetOptions() 
+        test_options = options.SetPipelineOptions() 
         print(options)
     
 class TestStreamsRead(unittest.TestCase):
