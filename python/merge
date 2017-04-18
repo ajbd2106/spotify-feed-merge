@@ -2,16 +2,19 @@
 
 import json
 
-print(__name__)
-
-from apache_beam.pvalue import AsList
-
+#import create_pipeline
+import streams
 import tracks
 import users
 
+from options import SetPipelineOptions
 
-p = []
-p = ab.Pipeline(options=o)
+spo = SetPipelineOptions()
+spo.options = spo.set_pipeline()
+options = spo.set_google_cloud_options(spo.google_cloud, spo.pipeline)
+options = spo.set_runner(spo.options, spo.config.get('standard').get('runner'))
+pipeline = create_pipeline.CreatePipeline(options)
+
 s = (p 
      | 'read streams' >> ab.io.ReadFromText('gs://abbynormal/streams.gz') 
      | 'map streams' >> ab.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
