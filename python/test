@@ -67,11 +67,13 @@ class TestReadStreams(unittest.TestCase):
     def test_read_streams(self):
         rs = ReadStreams()    
         streams = rs.read_streams(self.pipeline)
-        print(type(streams))
-        self.assertIsInstance(streams, apache_beam.utils.pipeline_options.PipelineOptions)
+        self.assertIsInstance(streams, apache_beam.pvalue.PCollection)
+        self.streams = streams
     
     def test_map_streams(self):
-        pass
+        rs = ReadStreams()
+        streams = rs.map_streams(self.streams)
+        self.assertIsInstance(streams, apache_beam.pvalue.PCollection)
 
 class TestTracksRead(unittest.TestCase):
     def __init__():
