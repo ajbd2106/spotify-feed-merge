@@ -18,10 +18,26 @@ class TestOptions(unittest.TestCase):
     def setUp(self):
         return None 
 
-    def test_set_options(self):
+    def test_instantiate_class(self):
         options = SetPipelineOptions() 
         self.assertIsInstance(options, SetPipelineOptions) 
-    
+
+    def test_set_google_cloud_options(self):
+        gco = SetPipelineOptions()
+        google_cloud = gco.config.get("google_cloud")
+        gco.set_google_cloud_options(google_cloud, gco.set_pipeline)
+        self.assertIsInstance(gco, apache_beam.utils.pipeline_options.GoogleCloudOptions)
+
+    def test_set_pipeline(self): 
+        pipeline = SetPipelineOptions().set_pipeline() 
+        self.assertIsInstance(pipeline, apache_beam.utils.pipeline_options.PipelineOptions)
+
+    def test_set_runner(self):
+        options = SetPipelineOptions()
+        runner = options.set_runner(options, 'DataflowRunner')
+        self.assertIsInstance(runner, apache_beam.utils.pipeline_options.PipelineOptions)
+        
+
 class TestStreamsRead(unittest.TestCase):
     def __init__():
         pass
