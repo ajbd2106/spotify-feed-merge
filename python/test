@@ -20,7 +20,7 @@ class TestOptions(unittest.TestCase):
 
     def test_set_options(self):
         options = SetPipelineOptions() 
-        self.assertIsInstance(options, apache_beam.utils.pipeline_options.PipelineOptions)
+        self.assertIsInstance(options, SetPipelineOptions) 
     
 class TestStreamsRead(unittest.TestCase):
     def __init__():
