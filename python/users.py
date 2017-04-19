@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-class ProcessUsers(ab.DoFn):
+import apache_beam
+
+class ProcessUsers(apache_beam.DoFn):
     def process(self, element):
         key, values = element
         users = values.get('users')[0]

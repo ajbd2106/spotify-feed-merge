@@ -1,4 +1,6 @@
-# Spotify Feed Merge
+# Spotify Feed Merge  
+
+[![Build Status](https://semaphoreci.com/api/v1/gahancorpcfo/spotify-feed-merge/branches/master/badge.svg)](https://semaphoreci.com/gahancorpcfo/spotify-feed-merge)
 
 ```python
 #!/usr/bin/env/ python
@@ -29,8 +31,4 @@ data = {
   "report_date":"2016-10-19 00:00:00 UTC"
 }
 ```
-### Python Build Status
-[![Build Status](https://semaphoreci.com/api/v1/gahancorpcfo/spotify-feed-merge/branches/master/badge.svg)](https://semaphoreci.com/gahancorpcfo/spotify-feed-merge)
 
-### Java Build Status
-[![Build Status](https://semaphoreci.com/api/v1/gahancorpcfo/spotify-feed-merge-java/branches/master/badge.svg)](https://semaphoreci.com/gahancorpcfo/spotify-feed-merge-java)
