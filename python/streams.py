@@ -7,7 +7,7 @@ import os
 from options import SetPipelineOptions
 
 class ReadStreams:
-    streams_path = configobj.ConfigObj("/python/sfm.conf").get('standard').get('streams')    
+    streams_path = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
 
     def read_streams(self, pipeline):
         return (pipeline 
