@@ -1,0 +1,23 @@
+---
+- name: Install the Google SDK.
+  hosts: localhost
+  tasks:
+    - apt_repository:
+        repo: deb https://packages.cloud.google.com/apt cloud-sdk-xenial main
+        state: present
+    - apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+    - apt:
+        name: google-cloud-sdk
+        state: latest
+        update_cache: yes
+    - pip:
+        name: "{{ item }}"
+        state: latest
+      with_items: 
+      - google-compute-engine
+      - gcloud
+      - google-apitools
+...
+# vim: ft=ansible:
