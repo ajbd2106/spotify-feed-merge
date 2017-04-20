@@ -2,7 +2,6 @@
 
 import apache_beam
 import configobj
-import os
 
 from options import SetPipelineOptions
 
