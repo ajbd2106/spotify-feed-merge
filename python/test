@@ -162,7 +162,7 @@ class TestProcessing(unittest.TestCase):
 
     def test_process_tracks(self):
         gs = GroupStreams()
-        streams_with_tracks = gs.group_streams_with_tracks(self.streams, self.users)
+        streams_with_tracks = gs.group_streams_with_tracks(self.pipeline, self.streams, self.users)
         process_tracks = streams_with_tracks | 'process tracks' >> apache_beam.ParDo(ProcessTracks())
         self.assertIsInstance(process_tracks, apache_beam.pvalue.PCollection)
 
