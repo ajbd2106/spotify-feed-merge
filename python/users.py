@@ -2,6 +2,7 @@
 
 import apache_beam
 import configobj
+import json
 
 from options import SetPipelineOptions
 
@@ -13,8 +14,10 @@ class ReadUsers():
             | 'read users' >> apache_beam.io.ReadFromText(self.users_path)
         )
     
-    def map_users():
-        pass
+    def map_users(self, pipeline):
+        return (pipeline
+            | 'map users' >> apache_beam.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
+        )
 
 class ProcessUsers(apache_beam.DoFn):
     def process(self, element):

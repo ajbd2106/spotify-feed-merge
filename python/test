@@ -98,7 +98,7 @@ test_reads = unittest.TestLoader().loadTestsFromTestCase(TestReads)
 suite = unittest.TestSuite([
     test_create_pipeline,
     test_options,
-    test_streams,
+    test_reads,
 ])
 results = unittest.TextTestRunner(verbosity=5).run(suite)
 
