@@ -37,6 +37,7 @@ tracks_pc = read_tracks.map_tracks(tracks_pc)
 group_streams = streams.GroupStreams()
 
 streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
+streams_pc = 'process users' >> apache_beam.ParDo(users.ProcessUsers())
 
 """
 s = s | 'process users' >> ab.ParDo(ProcessUsers())
