@@ -6,7 +6,7 @@ import json
 
 from options import SetPipelineOptions
 
-class ReadUsers():
+class ReadUsers:
     users_path = configobj.ConfigObj("sfm.conf").get('standard').get('users') 
 
     def read_users(self, pipeline):
