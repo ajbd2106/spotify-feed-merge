@@ -19,7 +19,7 @@ class TestCreatePipeline(unittest.TestCase):
     def test_pipeline_create(self):
         pipeline = CreatePipeline(options=None)
         # bacon = Bacon(pipeline.pipeline)
-        print(bacon)
+        # print(bacon)
         self.assertIsInstance(pipeline, apache_beam.Pipeline) 
 
     def test_pipeline_options(self):
