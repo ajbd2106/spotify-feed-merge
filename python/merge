@@ -39,7 +39,6 @@ group_streams = streams.GroupStreams()
 streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
 
 """
-s = (({'streams':s,'users':u}) | 'co group by key users' >> ab.CoGroupByKey())
 s = s | 'process users' >> ab.ParDo(ProcessUsers())
 s = s | 'remap streams' >> ab.Map(lambda sid: (sid.get('track_id'), sid))
 s = (({'streams':s, 'tracks':t}) | 'co group by key tracks' >> ab.CoGroupByKey(pipeline=p))
