@@ -137,11 +137,13 @@ class TestGroups(unittest.TestCase):
 test_create_pipeline = unittest.TestLoader().loadTestsFromTestCase(TestCreatePipeline)
 test_options = unittest.TestLoader().loadTestsFromTestCase(TestOptions)
 test_reads = unittest.TestLoader().loadTestsFromTestCase(TestReads)
+test_groups = unittest.TestLoader().loadTestsFromTestCase(TestGroups)
 
 suite = unittest.TestSuite([
     test_create_pipeline,
     test_options,
     test_reads,
+    test_groups,
 ])
 results = unittest.TextTestRunner(verbosity=5).run(suite)
 
