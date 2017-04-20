@@ -2,6 +2,13 @@
 
 import apache_beam
 
+class ReadUsers():
+    def read_users():
+        pass
+    
+    def map_users():
+        pass
+
 class ProcessUsers(apache_beam.DoFn):
     def process(self, element):
         key, values = element

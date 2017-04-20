@@ -81,6 +81,12 @@ class TestReads(unittest.TestCase):
         users = ru.read_users(self.pipeline)
         self.assertIsInstance(users, apache_beam.pvalue.PCollection)
 
+    def test_map_users(self):
+        ru = ReadUsers()
+        users = ru.read_users(self.pipeline)
+        users = ru.map_users(users)
+        self.assertIsInstance(users, apache_beam.pvalue.PCollection)
+
 class TestTracksRead(unittest.TestCase):
     def __init__():
        pass 
