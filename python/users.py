@@ -1,10 +1,17 @@
 #!/usr/bin/env python
 
 import apache_beam
+import configobj
+
+from options import SetPipelineOptions
 
 class ReadUsers():
-    def read_users():
-        pass
+    users_path = configobj.ConfigObj("sfm.conf").get('standard').get('users') 
+
+    def read_users(self, pipeline):
+        return (pipeline
+            | 'read users' >> apache_beam.io.ReadFromText(self.users_path)
+        )
     
     def map_users():
         pass
