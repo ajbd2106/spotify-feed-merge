@@ -5,15 +5,15 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='spotify-feed-merge',
+    name='spotify_feed_merge',
     version='2.0.0',
-    description='Merge three spotify feeds into one.'
+    description='Merge three spotify feeds into one.',
     url='https://github.com/gahan-corporation/spotify-feed-merge',
     author='Gahan Corporation',
     author_email='info@gahan-corporation.com',
     license='BSD',
 
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    packages=find_packages(),
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -30,7 +30,11 @@ setup(
         'sfm': ['sfm.conf'],
     },
 
-    data_files=[('my_data', ['data/data_file'])],
+    data_files=[
+        ('streams', ['/srv/spotify-feed-merge/data/streams.gz']),
+        ('tracks', ['/srv/spotify-feed-merge/data/tracks.gz']),
+        ('users', ['/srv/spotify-feed-merge/data/users.gz']),
+    ],
 
     entry_points={
         'console_scripts': [

@@ -1,0 +1,8 @@
+apache_beam
+nose
+
+[dev]
+check-manifest
+
+[test]
+coverage
