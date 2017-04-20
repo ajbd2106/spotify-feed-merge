@@ -2,6 +2,7 @@
 
 import apache_beam
 import configobj
+import json
 
 from options import SetPipelineOptions
 
@@ -23,3 +24,8 @@ class GroupStreams:
         return (({'streams': streams, 'users': users})
             | 'co group by key user_id' >> apache_beam.CoGroupByKey()
         ) # (({'streams':s,'users':u}) | 'co group by key users' >> ab.CoGroupByKey())
+
+    def remap_streams(self, streams):
+        return (streams
+            | 'remap streams' >> apache_beam.Map(lambda streams: (json.loads(streams).get('track_id'), json.loads(streams)))
+        )
