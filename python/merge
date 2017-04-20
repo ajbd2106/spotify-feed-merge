@@ -17,23 +17,24 @@ pipeline = CreatePipeline(options).pipeline
 
 read_streams = streams.ReadStreams()
 
-streams = read_streams.read_streams(pipeline)
-streams = read_streams.map_streams(streams)
+streams_pc = read_streams.read_streams(pipeline)
+streams_pc = read_streams.map_streams(streams_pc)
 
-print(streams)
+print(streams_pc)
 
+read_users = users.ReadUsers()
+
+users_pc = read_users.read_users(pipeline)
+users_pc = read_users.map_users(users_pc)
+
+print(users_pc)
+
+read_tracks = tracks.ReadTracks()
+
+tracks_pc = read_tracks.read_tracks(pipeline)
+tracks_pc = read_tracks.map_tracks(tracks_pc)
 
 """
-u = (p
-     | 'read users' >> ab.io.ReadFromText('gs://abbynormal/users.gz')
-     | 'map users' >> ab.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
-)
-
-t = (p
-     | 'read tracks' >> ab.io.ReadFromText('gs://abbynormal/tracks.gz')
-     | 'map tracks' >> ab.Map(lambda track_id: (json.loads(track_id).get('track_id'), json.loads(track_id)))
-)
-
 s = (({'streams':s,'users':u}) | 'co group by key users' >> ab.CoGroupByKey())
 s = s | 'process users' >> ab.ParDo(ProcessUsers())
 s = s | 'remap streams' >> ab.Map(lambda sid: (sid.get('track_id'), sid))

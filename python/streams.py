@@ -17,3 +17,9 @@ class ReadStreams:
         return (pipeline
              | 'map streams' >> apache_beam.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
         )
+
+class GroupStreamsWithUsers:
+    def group_streams_with_users(self, streams, users):
+        return (({'streams': streams, 'users': users})
+            | 'co group by key user_id' >> apache_beam.CoGroupByKey()
+        ) # (({'streams':s,'users':u}) | 'co group by key users' >> ab.CoGroupByKey())
