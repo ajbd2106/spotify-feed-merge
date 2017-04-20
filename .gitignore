@@ -1,2 +1,4 @@
 *.swp
 sfm.json
+build/
+dist/

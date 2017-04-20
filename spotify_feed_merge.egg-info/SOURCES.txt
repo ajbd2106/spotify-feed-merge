@@ -1,3 +1,4 @@
+setup.py
 /srv/spotify-feed-merge/data/streams.gz
 /srv/spotify-feed-merge/data/tracks.gz
 /srv/spotify-feed-merge/data/users.gz
