@@ -30,6 +30,9 @@ class GroupStreams:
             | 'co group by key user_id' >> apache_beam.CoGroupByKey()
         ) 
 
+    def output_result(self, streams):
+        return None
+
     def remap_streams(self, streams):
         return (streams
             | 'remap streams' >> apache_beam.Map(lambda streams: (json.loads(streams).get('track_id'), json.loads(streams)))
