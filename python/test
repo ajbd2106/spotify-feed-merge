@@ -145,7 +145,7 @@ class TestProcessing(unittest.TestCase):
         streams_with_users = gs.group_streams_with_users(self.streams, self.users)
         process_users = streams_with_users | 'process users' >> apache_beam.ParDo(ProcessUsers())
         self.streams = gs.remap_streams(self.streams)
-        self.assertIsInstance(self.streams, apache_beam.PCollection)
+        self.assertIsInstance(self.streams, apache_beam.pvalue.PCollection)
 
 
 
