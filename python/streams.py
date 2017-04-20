@@ -8,7 +8,6 @@ from options import SetPipelineOptions
 
 class ReadStreams:
     streams_path = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
-    denormalized_path = confiobj.ConfigObj("sfm.conf").get('standard').get('denormalized')
 
     def read_streams(self, pipeline):
         return (pipeline 
@@ -21,6 +20,8 @@ class ReadStreams:
         )
 
 class GroupStreams:
+    denormalized_path = configobj.ConfigObj("sfm.conf").get('standard').get('denormalized')
+
     def group_streams_with_tracks(self, pipeline, streams, tracks):
         return (({'streams': streams, 'tracks': tracks})
             | 'co group by key track_id' >> apache_beam.CoGroupByKey(pipeline=pipeline)
@@ -33,7 +34,7 @@ class GroupStreams:
 
     def output_result(self, streams):
         return (streams
-             | 'output' >> ab.io.WriteToText(denormalized_path)
+             | 'output' >> apache_beam.io.WriteToText(self.denormalized_path)
         )
 
     def remap_streams(self, streams):

@@ -171,7 +171,7 @@ class TestProcessing(unittest.TestCase):
         streams_with_tracks = gs.group_streams_with_tracks(self.pipeline, self.streams, self.users)
         process_tracks = streams_with_tracks | 'process tracks' >> apache_beam.ParDo(ProcessTracks())
         result = gs.output_result(process_tracks)
-        self.assertIsInstance(output_result, apache_beam.pvalue.PCollection)
+        self.assertIsInstance(result, apache_beam.pvalue.PCollection)
 
 
 test_create_pipeline = unittest.TestLoader().loadTestsFromTestCase(TestCreatePipeline)
