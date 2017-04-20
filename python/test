@@ -130,12 +130,12 @@ class TestProcessing(unittest.TestCase):
         self.users = ru.map_users(self.users)
  
     def test_group_streams_with_users(self):
-        group_by = GroupStreamsWithUsers()
+        group_by = GroupStreams()
         grouped_result = group_by.group_streams_with_users(self.streams, self.users)
         self.assertIsInstance(grouped_result, apache_beam.pvalue.PCollection) 
 
     def test_process_users(self):
-        group_by = GroupStreamsWithUsers()
+        group_by = GroupStreams()
         streams_with_users = group_by.group_streams_with_users(self.streams, self.users)
         process_users = streams_with_users | 'process users' >> apache_beam.ParDo(ProcessUsers())
         self.assertIsInstance(process_users, apache_beam.pvalue.PCollection)
