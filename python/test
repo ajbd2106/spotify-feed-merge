@@ -124,17 +124,17 @@ class TestProcessing(unittest.TestCase):
     
         # Prepare the streams pipeline.
         rs = ReadStreams()
-        self.streams = rs.read_streams(pipeline)
+        self.streams = rs.read_streams(self.pipeline)
         self.streams = rs.map_streams(self.streams)
 
         # Prepare the tracks pipeline.
         rt = ReadTracks()
-        self.tracks = rt.read_tracks(pipeline)
+        self.tracks = rt.read_tracks(self.pipeline)
         self.tracks = rt.map_tracks(self.tracks)
 
         # Prepare the users pipeline.
         ru = ReadUsers()
-        self.users = ru.read_users(pipeline)
+        self.users = ru.read_users(self.pipeline)
         self.users = ru.map_users(self.users)
 
     def test_group_streams_with_users(self):
