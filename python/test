@@ -108,6 +108,7 @@ class TestReads(unittest.TestCase):
         self.assertIsInstance(tracks, apache_beam.pvalue.PCollection) 
 
 class TestProcessing(unittest.TestCase):
+    pipeline = ""
     streams = ""
     tracks = ""
     users = ""
@@ -119,18 +120,23 @@ class TestProcessing(unittest.TestCase):
         options.pipeline = options.set_pipeline()
         options.set_google_cloud_options(google_cloud, options.pipeline)
         options = options.set_runner(options.pipeline, runner)
-        pipeline = CreatePipeline(options=options).pipeline
+        self.pipeline = CreatePipeline(options=options).pipeline
     
         # Prepare the streams pipeline.
         rs = ReadStreams()
         self.streams = rs.read_streams(pipeline)
         self.streams = rs.map_streams(self.streams)
 
+        # Prepare the tracks pipeline.
+        rt = ReadTracks()
+        self.tracks = rt.read_tracks(pipeline)
+        self.tracks = rt.map_tracks(self.tracks)
+
         # Prepare the users pipeline.
         ru = ReadUsers()
         self.users = ru.read_users(pipeline)
         self.users = ru.map_users(self.users)
- 
+
     def test_group_streams_with_users(self):
         group_by = GroupStreams()
         grouped_result = group_by.group_streams_with_users(self.streams, self.users)
@@ -151,7 +157,7 @@ class TestProcessing(unittest.TestCase):
     
     def test_group_streams_with_tracks(self):
         gs = GroupStreams()
-        grouped_result = gs.group_streams_with_tracks(self.streams, self.users)
+        grouped_result = gs.group_streams_with_tracks(self.pipeline, self.streams, self.tracks)
         self.assertIsInstance(grouped_result, apache_beam.pvalue.PCollection) 
 
     def test_process_tracks(self):

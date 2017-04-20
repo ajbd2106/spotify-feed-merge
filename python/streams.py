@@ -20,15 +20,15 @@ class ReadStreams:
         )
 
 class GroupStreams:
-    def group_streams_with_tracks(self, streams, tracks):
+    def group_streams_with_tracks(self, pipeline, streams, tracks):
         return (({'streams': streams, 'tracks': tracks})
-            | 'co group by key track_id' >> ab.CoGroupByKey(pipeline=streams)
+            | 'co group by key track_id' >> apache_beam.CoGroupByKey(pipeline=pipeline)
         )
 
     def group_streams_with_users(self, streams, users):
         return (({'streams': streams, 'users': users})
             | 'co group by key user_id' >> apache_beam.CoGroupByKey()
-        ) # (({'streams':s,'users':u}) | 'co group by key users' >> ab.CoGroupByKey())
+        ) 
 
     def remap_streams(self, streams):
         return (streams
