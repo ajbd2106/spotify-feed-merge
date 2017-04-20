@@ -42,10 +42,9 @@ streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
 streams_pc = streams_pc | 'process users' >> apache_beam.ParDo(users.ProcessUsers())
 streams_pc = group_streams.remap_streams(streams_pc)
 streams_pc = streams_pc | 'process tracks' >> apache_beam.ParDo(tracks.ProcessTracks())
-streams_pc = group_streams.group_streams_with_tracks(streams_pc, tracks_pc)
+streams_pc = group_streams.group_streams_with_tracks(pipeline, streams_pc, tracks_pc)
 
 """
-s = s | 'process tracks' >> ab.ParDo(ProcessTracks())
 s = s | 'output' >> ab.io.WriteToText('gs://abbynormal/dnormal')
 
 p.run()
