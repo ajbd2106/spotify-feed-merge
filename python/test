@@ -12,6 +12,7 @@ from options import SetPipelineOptions
 from streams import GroupStreamsWithUsers
 from streams import ReadStreams
 from tracks import ReadTracks
+from users import ProcessUsers
 from users import ReadUsers
 
 class TestCreatePipeline(unittest.TestCase):
@@ -105,7 +106,7 @@ class TestReads(unittest.TestCase):
         tracks = rt.map_tracks(self.pipeline)
         self.assertIsInstance(tracks, apache_beam.pvalue.PCollection) 
 
-class TestGroups(unittest.TestCase):
+class TestProcessing(unittest.TestCase):
     streams = ""
     users = ""
 
@@ -128,22 +129,29 @@ class TestGroups(unittest.TestCase):
         self.users = ru.read_users(pipeline)
         self.users = ru.map_users(self.users)
  
-
     def test_group_streams_with_users(self):
         group_by = GroupStreamsWithUsers()
         grouped_result = group_by.group_streams_with_users(self.streams, self.users)
         self.assertIsInstance(grouped_result, apache_beam.pvalue.PCollection) 
 
+    def test_process_users(self):
+        group_by = GroupStreamsWithUsers()
+        streams_with_users = group_by.group_streams_with_users(self.streams, self.users)
+        process_users = streams_with_users | 'process users' >> apache_beam.ParDo(ProcessUsers())
+        self.assertIsInstance(process_users, apache_beam.pvalue.PCollection)
+
+
+
 test_create_pipeline = unittest.TestLoader().loadTestsFromTestCase(TestCreatePipeline)
 test_options = unittest.TestLoader().loadTestsFromTestCase(TestOptions)
 test_reads = unittest.TestLoader().loadTestsFromTestCase(TestReads)
-test_groups = unittest.TestLoader().loadTestsFromTestCase(TestGroups)
+test_processing = unittest.TestLoader().loadTestsFromTestCase(TestProcessing)
 
 suite = unittest.TestSuite([
     test_create_pipeline,
     test_options,
     test_reads,
-    test_groups,
+    test_processing,
 ])
 results = unittest.TextTestRunner(verbosity=5).run(suite)
 
