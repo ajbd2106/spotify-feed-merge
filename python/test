@@ -7,6 +7,7 @@ import unittest
 from create_pipeline import CreatePipeline
 from options import SetPipelineOptions
 from streams import ReadStreams
+from users import ReadUsers
 
 class TestCreatePipeline(unittest.TestCase):
     def setUp(self): 
@@ -52,7 +53,7 @@ class TestOptions(unittest.TestCase):
         self.assertIsInstance(runner, apache_beam.utils.pipeline_options.PipelineOptions)
         
 
-class TestReadStreams(unittest.TestCase):
+class TestReads(unittest.TestCase):
     pipeline = ""
 
     def setUp(self):
@@ -75,17 +76,18 @@ class TestReadStreams(unittest.TestCase):
         streams = rs.map_streams(streams)
         self.assertIsInstance(streams, apache_beam.pvalue.PCollection)
 
+    def test_read_users(self):
+        ru = ReadUsers()
+        users = ru.read_users(self.pipeline)
+        self.assertIsInstance(users, apache_beam.pvalue.PCollection)
+
 class TestTracksRead(unittest.TestCase):
     def __init__():
        pass 
 
-class TestUsersRead(unittest.TestCase):
-    def __init__():
-        pass
-
 test_create_pipeline = unittest.TestLoader().loadTestsFromTestCase(TestCreatePipeline)
 test_options = unittest.TestLoader().loadTestsFromTestCase(TestOptions)
-test_streams = unittest.TestLoader().loadTestsFromTestCase(TestReadStreams)
+test_reads = unittest.TestLoader().loadTestsFromTestCase(TestReads)
 
 suite = unittest.TestSuite([
     test_create_pipeline,
