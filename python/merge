@@ -34,17 +34,18 @@ read_tracks = tracks.ReadTracks()
 tracks_pc = read_tracks.read_tracks(pipeline)
 tracks_pc = read_tracks.map_tracks(tracks_pc)
 
+print(tracks_pc)
+
 group_streams = streams.GroupStreams()
 
 streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
-streams_pc = 'process users' >> apache_beam.ParDo(users.ProcessUsers())
+streams_pc = streams_pc | 'process users' >> apache_beam.ParDo(users.ProcessUsers())
+streams_pc = group_streams.remap_streams(streams_pc)
+streams_pc = streams_pc | 'process tracks' >> apache_beam.ParDo(tracks.ProcessTracks())
+streams_pc = group_streams.group_streams_with_tracks(streams_pc, tracks_pc)
 
 """
-s = s | 'process users' >> ab.ParDo(ProcessUsers())
-s = s | 'remap streams' >> ab.Map(lambda sid: (sid.get('track_id'), sid))
-s = (({'streams':s, 'tracks':t}) | 'co group by key tracks' >> ab.CoGroupByKey(pipeline=p))
 s = s | 'process tracks' >> ab.ParDo(ProcessTracks())
-#s = s | 'print st' >> ab.Map(lambda sid: print(sid))
 s = s | 'output' >> ab.io.WriteToText('gs://abbynormal/dnormal')
 
 p.run()

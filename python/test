@@ -11,6 +11,7 @@ from create_pipeline import CreatePipeline
 from options import SetPipelineOptions
 from streams import GroupStreams
 from streams import ReadStreams
+from tracks import ProcessTracks
 from tracks import ReadTracks
 from users import ProcessUsers
 from users import ReadUsers
@@ -108,6 +109,7 @@ class TestReads(unittest.TestCase):
 
 class TestProcessing(unittest.TestCase):
     streams = ""
+    tracks = ""
     users = ""
 
     def setUp(self):
@@ -146,7 +148,17 @@ class TestProcessing(unittest.TestCase):
         process_users = streams_with_users | 'process users' >> apache_beam.ParDo(ProcessUsers())
         self.streams = gs.remap_streams(self.streams)
         self.assertIsInstance(self.streams, apache_beam.pvalue.PCollection)
+    
+    def test_group_streams_with_users(self):
+        gs = GroupStreams()
+        grouped_result = gs.group_streams_with_tracks(self.streams, self.users)
+        self.assertIsInstance(grouped_result, apache_beam.pvalue.PCollection) 
 
+    def test_process_tracks(self):
+        gs = GroupStreams()
+        streams_with_tracks = gs.group_streams_with_tracks(self.streams, self.users)
+        process_tracks = streams_with_tracks | 'process tracks' >> apache_beam.ParDo(ProcessTracks())
+        self.assertIsInstance(process_tracks, apache_beam.pvalue.PCollection)
 
 
 test_create_pipeline = unittest.TestLoader().loadTestsFromTestCase(TestCreatePipeline)
