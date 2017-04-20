@@ -9,6 +9,7 @@ import unittest
 
 from create_pipeline import CreatePipeline
 from options import SetPipelineOptions
+from streams import GroupStreamsWithUsers
 from streams import ReadStreams
 from tracks import ReadTracks
 from users import ReadUsers
@@ -103,6 +104,35 @@ class TestReads(unittest.TestCase):
         tracks = rt.read_tracks(self.pipeline)
         tracks = rt.map_tracks(self.pipeline)
         self.assertIsInstance(tracks, apache_beam.pvalue.PCollection) 
+
+class TestGroups(unittest.TestCase):
+    streams = ""
+    users = ""
+
+    def setUp(self):
+        options = SetPipelineOptions()
+        google_cloud = options.config.get('google_cloud')
+        runner = options.config.get('standard').get('runner')
+        options.pipeline = options.set_pipeline()
+        options.set_google_cloud_options(google_cloud, options.pipeline)
+        options = options.set_runner(options.pipeline, runner)
+        pipeline = CreatePipeline(options=options).pipeline
+    
+        # Prepare the streams pipeline.
+        rs = ReadStreams()
+        self.streams = rs.read_streams(pipeline)
+        self.streams = rs.map_streams(self.streams)
+
+        # Prepare the users pipeline.
+        ru = ReadUsers()
+        self.users = ru.read_users(pipeline)
+        self.users = ru.map_users(self.users)
+ 
+
+    def test_group_by_user_id(self):
+        group_by = GroupStreamsWithUsers()
+        grouped_result = group_by.group_streams_with_users(self.streams, self.users)
+        self.assertIsInstance(grouped_result, apache_beam.pvalue.PCollection) 
 
 test_create_pipeline = unittest.TestLoader().loadTestsFromTestCase(TestCreatePipeline)
 test_options = unittest.TestLoader().loadTestsFromTestCase(TestOptions)

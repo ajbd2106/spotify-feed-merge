@@ -19,6 +19,6 @@ class ReadStreams:
         )
 
 class GroupStreamsWithUsers:
-    def group_by_user_id(self, pipeline):
+    def group_by_user_id(self, streams, users):
         #(({'streams':s,'users':u}) | 'co group by key users' >> ab.CoGroupByKey())
         return None
