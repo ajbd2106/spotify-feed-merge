@@ -1,6 +1,23 @@
 #!/usr/bin/env python
 
 import apache_beam
+import configobj
+import json
+
+from options import SetPipelineOptions
+
+class ReadUsers():
+    users_path = configobj.ConfigObj("sfm.conf").get('standard').get('users') 
+
+    def read_users(self, pipeline):
+        return (pipeline
+            | 'read users' >> apache_beam.io.ReadFromText(self.users_path)
+        )
+    
+    def map_users(self, pipeline):
+        return (pipeline
+            | 'map users' >> apache_beam.Map(lambda user_id: (json.loads(user_id).get('user_id'), json.loads(user_id)))
+        )
 
 class ProcessUsers(apache_beam.DoFn):
     def process(self, element):
