@@ -21,8 +21,9 @@ class ReadStreams:
 
 class GroupStreams:
     def group_streams_with_tracks(self, streams, tracks):
-        # s = (({'streams':s, 'tracks':t}) | 'co group by key tracks' >> ab.CoGroupByKey(pipeline=p))
-        return None
+        return (({'streams': streams, 'tracks': tracks})
+            | 'co group by key track_id' >> ab.CoGroupByKey(pipeline=streams)
+        )
 
     def group_streams_with_users(self, streams, users):
         return (({'streams': streams, 'users': users})

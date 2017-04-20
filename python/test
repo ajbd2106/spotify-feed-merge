@@ -149,7 +149,7 @@ class TestProcessing(unittest.TestCase):
         self.streams = gs.remap_streams(self.streams)
         self.assertIsInstance(self.streams, apache_beam.pvalue.PCollection)
     
-    def test_group_streams_with_users(self):
+    def test_group_streams_with_tracks(self):
         gs = GroupStreams()
         grouped_result = gs.group_streams_with_tracks(self.streams, self.users)
         self.assertIsInstance(grouped_result, apache_beam.pvalue.PCollection) 
