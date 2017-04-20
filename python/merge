@@ -46,4 +46,4 @@ streams_pc = streams_pc | 'process tracks' >> apache_beam.ParDo(tracks.ProcessTr
 streams_pc = group_streams.group_streams_with_tracks(pipeline, streams_pc, tracks_pc)
 streams_pc = group_streams.output_result(streams_pc)
 
-p.run()
+pipeline.run()
