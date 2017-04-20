@@ -129,7 +129,7 @@ class TestGroups(unittest.TestCase):
         self.users = ru.map_users(self.users)
  
 
-    def test_group_by_user_id(self):
+    def test_group_streams_with_users(self):
         group_by = GroupStreamsWithUsers()
         grouped_result = group_by.group_streams_with_users(self.streams, self.users)
         self.assertIsInstance(grouped_result, apache_beam.pvalue.PCollection) 
