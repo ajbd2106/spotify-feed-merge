@@ -6,7 +6,7 @@ here = path.abspath(path.dirname(__file__))
 
 setup(
     name='sfm',
-    version='2.0.0',
+    version='0.2.0',
     description='Merge three spotify feeds into one.',
     url='https://github.com/gahan-corporation/spotify-feed-merge',
     author='Gahan Corporation',

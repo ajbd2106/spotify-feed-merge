@@ -1,4 +1,0 @@
-[console_scripts]
-merge = merge:main
-test = test:main
-

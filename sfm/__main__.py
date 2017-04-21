@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+import apache_beam
+import json
+
+from .options import SetPipelineOptions
+
+
+__name__ = '__main__'
+
+def main():
+    spo = SetPipelineOptions()
+    spo.options = spo.set_pipeline()
+    options = spo.set_google_cloud_options(spo.google_cloud, spo.options)
+    options = spo.set_runner(spo.options, spo.config.get('standard').get('runner'))
+    pipeline = CreatePipeline(options).pipeline
+
+    read_streams = streams.ReadStreams()
+
+    streams_pc = read_streams.read_streams(pipeline)
+    streams_pc = read_streams.map_streams(streams_pc)
+
+    print(streams_pc)
+
+    read_users = users.ReadUsers()
+
+    users_pc = read_users.read_users(pipeline)
+    users_pc = read_users.map_users(users_pc)
+
+    print(users_pc)
+
+    read_tracks = tracks.ReadTracks()
+
+    tracks_pc = read_tracks.read_tracks(pipeline)
+    tracks_pc = read_tracks.map_tracks(tracks_pc)
+
+    print(tracks_pc)
+
+    group_streams = streams.GroupStreams()
+
+    streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
+    streams_pc = streams_pc | 'process users' >> apache_beam.ParDo(users.ProcessUsers())
+    streams_pc = group_streams.remap_streams(streams_pc)
+    streams_pc = streams_pc | 'process tracks' >> apache_beam.ParDo(tracks.ProcessTracks())
+    streams_pc = group_streams.group_streams_with_tracks(pipeline, streams_pc, tracks_pc)
+    streams_pc = group_streams.output_result(streams_pc)
+
+    pipeline.run()
+
+if __name__ == '__main__':
+    main()
