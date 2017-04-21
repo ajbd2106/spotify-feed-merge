@@ -5,7 +5,7 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='spotify_feed_merge',
+    name='sfm',
     version='2.0.0',
     description='Merge three spotify feeds into one.',
     url='https://github.com/gahan-corporation/spotify-feed-merge',
@@ -13,7 +13,12 @@ setup(
     author_email='info@gahan-corporation.com',
     license='BSD',
 
-    py_modules=["create_pipeline", "options", "streams", "tracks", "users", ],
+    py_modules=[
+        "spotify-feed-merge.create_pipeline", 
+        "spotify-feed-merge.options", 
+        "spotify-feed-merge.streams", 
+        "spotify-feed-merge.tracks", 
+        "spotify-feed-merge.users", ],
 
     install_requires=['apache_beam', 'nose'],
 

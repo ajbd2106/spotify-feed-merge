@@ -3,7 +3,7 @@
 import apache_beam
 import json
 
-import spotify_feed_merge
+import sfm 
 import streams 
 import tracks
 import users
