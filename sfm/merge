@@ -3,12 +3,13 @@
 import apache_beam
 import json
 
-import streams 
-import tracks
-import users
+import sfm
+import sfm.streams  as streams
+import sfm.tracks as tracks
+import sfm.users as users
 
-from create_pipeline import CreatePipeline
-from options import SetPipelineOptions
+from sfm.create_pipeline import CreatePipeline
+from sfm.options import SetPipelineOptions
 
 spo = SetPipelineOptions()
 spo.options = spo.set_pipeline()

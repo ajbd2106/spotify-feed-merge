@@ -7,7 +7,10 @@ import json
 from options import SetPipelineOptions
 
 class ReadStreams:
-    streams_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('streams')    
+    try:
+        streams_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('streams')    
+    except:
+        streams_path = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
 
     def read_streams(self, pipeline):
         return (pipeline 
