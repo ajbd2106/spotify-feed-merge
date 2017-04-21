@@ -12,27 +12,15 @@ setup(
     author='Gahan Corporation',
     author_email='info@gahan-corporation.com',
     license='BSD',
-
-    py_modules=[
-        "sfm.create_pipeline", "sfm.options" 
-    ],
-
     install_requires=['apache_beam', 'nose'],
-
     package_data={
         'sfm': ['sfm.conf'],
     },
-
     data_files=[
         ('streams.gz', ['/srv/sfm/data/streams.gz']),
         ('tracks.gz', ['/srv/sfm/data/tracks.gz']),
         ('users.gz', ['/srv/sfm/data/users.gz']),
     ],
-
-    entry_points={
-        'console_scripts': [
-            'merge=merge:main',
-            'test=test:main',
-        ],
-    },
+    test_suite='nose.collector',
+    tests_require=['nose']
 )
