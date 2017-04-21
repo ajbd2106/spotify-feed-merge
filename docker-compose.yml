@@ -6,7 +6,7 @@ services:
     volumes:
     - .:/java
   python:
-    build: spotify-feed-merge 
+    build: sfm 
     volumes:
      - .:/src
 ...
