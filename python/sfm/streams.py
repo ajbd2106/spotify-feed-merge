@@ -7,7 +7,10 @@ import json
 from options import SetPipelineOptions
 
 class ReadStreams:
-    streams_path = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
+    try:
+        streams_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('streams')    
+    except:
+        streams_path = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
 
     def read_streams(self, pipeline):
         return (pipeline 
@@ -20,10 +23,25 @@ class ReadStreams:
         )
 
 class GroupStreams:
+    try:
+        denormalized_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('denormalized')
+    except:
+        denormalized_path = configobj.ConfigObj("sfm.conf").get('standard').get('denormalized')
+
+    def group_streams_with_tracks(self, pipeline, streams, tracks):
+        return (({'streams': streams, 'tracks': tracks})
+            | 'co group by key track_id' >> apache_beam.CoGroupByKey(pipeline=pipeline)
+        )
+
     def group_streams_with_users(self, streams, users):
         return (({'streams': streams, 'users': users})
             | 'co group by key user_id' >> apache_beam.CoGroupByKey()
-        ) # (({'streams':s,'users':u}) | 'co group by key users' >> ab.CoGroupByKey())
+        ) 
+
+    def output_result(self, streams):
+        return (streams
+             | 'output' >> apache_beam.io.WriteToText(self.denormalized_path)
+        )
 
     def remap_streams(self, streams):
         return (streams

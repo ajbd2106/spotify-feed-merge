@@ -7,7 +7,10 @@ import configobj
 from options import SetPipelineOptions
 
 class ReadTracks:
-    tracks_path = configobj.ConfigObj("sfm.conf").get('standard').get('tracks')
+    try:
+        tracks_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('tracks')
+    except:
+        tracks_path = configobj.ConfigObj("sfm.conf").get('standard').get('tracks')
 
     def read_tracks(self, pipeline):
         return (pipeline

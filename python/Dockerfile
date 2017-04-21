@@ -1,9 +1,10 @@
 FROM gahancorpcfo/spotify-feed-merge-python 
 
-RUN pip install nose
+ADD . /srv/sfm
 
-ADD ./ /code
+WORKDIR /srv/sfm
 
-WORKDIR /code
+RUN python setup.py build
+RUN python setup.py install 
 
-CMD ["python", "/code/test"]
+CMD ["/usr/bin/python", "/srv/sfm/setup.py", "test"]

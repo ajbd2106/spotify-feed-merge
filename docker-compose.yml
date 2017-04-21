@@ -7,7 +7,5 @@ services:
     - .:/java
   python:
     build: python 
-    volumes:
-     - .:/src
 ...
 # vim: ft=ansible:
