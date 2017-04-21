@@ -15,6 +15,7 @@ class SetPipelineOptions:
         options = pipeline.view_as(apache_beam.utils.pipeline_options.GoogleCloudOptions) 
         options.project = google_cloud.get("project") 
         options.staging_location = google_cloud.get("staging") 
+        options.job_name = "sfm"
         # options.temp_location = google_cloud.get("temp") 
         return options 
 
