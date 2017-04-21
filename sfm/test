@@ -7,14 +7,14 @@ import unittest
 # For another time.
 # from apache_beam.pipeline_test import Bacon
 
-from create_pipeline import CreatePipeline
-from options import SetPipelineOptions
-from streams import GroupStreams
-from streams import ReadStreams
-from tracks import ProcessTracks
-from tracks import ReadTracks
-from users import ProcessUsers
-from users import ReadUsers
+from sfm.create_pipeline import CreatePipeline
+from sfm.options import SetPipelineOptions
+from sfm.streams import GroupStreams
+from sfm.streams import ReadStreams
+from sfm.tracks import ProcessTracks
+from sfm.tracks import ReadTracks
+from sfm.users import ProcessUsers
+from sfm.users import ReadUsers
 
 class TestCreatePipeline(unittest.TestCase):
     def setUp(self): 

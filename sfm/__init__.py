@@ -3,6 +3,6 @@
 import apache_beam 
 import configobj 
 
-import streams
-import tracks
-import users
+import sfm.streams
+import sfm.tracks
+import sfm.users

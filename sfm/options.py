@@ -2,10 +2,12 @@
 
 import apache_beam
 import configobj
-import os
 
-class SetPipelineOptions():
-    config = configobj.ConfigObj("sfm/sfm.conf")
+class SetPipelineOptions:
+    try:
+        config = configobj.ConfigObj("sfm/sfm.conf")
+    except:
+        config = configobj.ConfigObj("sfm.conf")
     options = apache_beam.utils.pipeline_options.PipelineOptions
 
     def __init__(self):
