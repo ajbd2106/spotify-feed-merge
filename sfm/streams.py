@@ -23,7 +23,10 @@ class ReadStreams:
         )
 
 class GroupStreams:
-    denormalized_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('denormalized')
+    try:
+        denormalized_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('denormalized')
+    except:
+        denormalized_path = configobj.ConfigObj("sfm.conf").get('standard').get('denormalized')
 
     def group_streams_with_tracks(self, pipeline, streams, tracks):
         return (({'streams': streams, 'tracks': tracks})
