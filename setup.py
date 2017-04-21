@@ -13,18 +13,9 @@ setup(
     author_email='info@gahan-corporation.com',
     license='BSD',
 
-    packages=find_packages(),
-
-    # Alternatively, if you want to distribute just a my_module.py, uncomment
-    # this:
-    #   py_modules=["my_module"],
+    py_modules=["create_pipeline", "options", "streams", "tracks", "users", ],
 
     install_requires=['apache_beam', 'nose'],
-
-    extras_require={
-        'dev': ['check-manifest'],
-        'test': ['coverage'],
-    },
 
     package_data={
         'sfm': ['sfm.conf'],
