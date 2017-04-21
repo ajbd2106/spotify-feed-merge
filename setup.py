@@ -14,11 +14,8 @@ setup(
     license='BSD',
 
     py_modules=[
-        "sfm.create_pipeline", 
-        "sfm.options", 
-        "sfm.streams", 
-        "sfm.tracks", 
-        "sfm.users", ],
+        "sfm.create_pipeline", "sfm.options" 
+    ],
 
     install_requires=['apache_beam', 'nose'],
 
@@ -27,9 +24,9 @@ setup(
     },
 
     data_files=[
-        ('streams', ['/srv/spotify-feed-merge/data/streams.gz']),
-        ('tracks', ['/srv/spotify-feed-merge/data/tracks.gz']),
-        ('users', ['/srv/spotify-feed-merge/data/users.gz']),
+        ('streams.gz', ['/srv/sfm/data/streams.gz']),
+        ('tracks.gz', ['/srv/sfm/data/tracks.gz']),
+        ('users.gz', ['/srv/sfm/data/users.gz']),
     ],
 
     entry_points={
