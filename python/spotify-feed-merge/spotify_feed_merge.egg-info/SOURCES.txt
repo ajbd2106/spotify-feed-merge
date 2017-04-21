@@ -1,0 +1,9 @@
+setup.py
+data/streams.gz
+data/tracks.gz
+data/users.gz
+spotify_feed_merge.egg-info/PKG-INFO
+spotify_feed_merge.egg-info/SOURCES.txt
+spotify_feed_merge.egg-info/dependency_links.txt
+spotify_feed_merge.egg-info/requires.txt
+spotify_feed_merge.egg-info/top_level.txt
