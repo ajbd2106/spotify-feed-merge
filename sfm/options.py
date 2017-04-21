@@ -5,7 +5,7 @@ import configobj
 import os
 
 class SetPipelineOptions():
-    config = configobj.ConfigObj("sfm.conf")
+    config = configobj.ConfigObj("sfm/sfm.conf")
     options = apache_beam.utils.pipeline_options.PipelineOptions
 
     def __init__(self):

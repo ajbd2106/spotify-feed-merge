@@ -14,11 +14,11 @@ setup(
     license='BSD',
 
     py_modules=[
-        "spotify-feed-merge.create_pipeline", 
-        "spotify-feed-merge.options", 
-        "spotify-feed-merge.streams", 
-        "spotify-feed-merge.tracks", 
-        "spotify-feed-merge.users", ],
+        "sfm.create_pipeline", 
+        "sfm.options", 
+        "sfm.streams", 
+        "sfm.tracks", 
+        "sfm.users", ],
 
     install_requires=['apache_beam', 'nose'],
 

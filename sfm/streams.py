@@ -7,7 +7,7 @@ import json
 from options import SetPipelineOptions
 
 class ReadStreams:
-    streams_path = configobj.ConfigObj("sfm.conf").get('standard').get('streams')    
+    streams_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('streams')    
 
     def read_streams(self, pipeline):
         return (pipeline 
@@ -20,7 +20,7 @@ class ReadStreams:
         )
 
 class GroupStreams:
-    denormalized_path = configobj.ConfigObj("sfm.conf").get('standard').get('denormalized')
+    denormalized_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('denormalized')
 
     def group_streams_with_tracks(self, pipeline, streams, tracks):
         return (({'streams': streams, 'tracks': tracks})
