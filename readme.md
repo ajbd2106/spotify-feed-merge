@@ -1,6 +1,6 @@
 # Spotify Feed Merge  
 
-[![Build Status](https://semaphoreci.com/api/v1/gahancorpcfo/spotify-feed-merge/branches/master/badge.svg)](https://semaphoreci.com/gahancorpcfo/spotify-feed-merge)
+[![Build Status](https://semaphoreci.com/api/v1/gahancorpcfo/sfm/branches/master/badge.svg)](https://semaphoreci.com/gahancorpcfo/sfm)
 
 ```python
 #!/usr/bin/env/ python
