@@ -12,7 +12,7 @@ setup(
     author='Gahan Corporation',
     author_email='info@gahan-corporation.com',
     license='BSD',
-    install_requires=['apache_beam', 'nose'],
+    install_requires=['apache_beam'],
     package_data={
         'sfm': ['sfm.conf'],
     },
