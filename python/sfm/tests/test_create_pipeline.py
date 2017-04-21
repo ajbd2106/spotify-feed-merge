@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import sfm
+import unittest
+
 class TestCreatePipeline(unittest.TestCase):
     def setUp(self): 
         return None
