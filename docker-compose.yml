@@ -6,6 +6,6 @@ services:
     volumes:
     - .:/java
   python:
-    build: python 
+    build: sfm 
 ...
 # vim: ft=ansible:
