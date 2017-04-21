@@ -1,6 +1,16 @@
 #!/usr/bin/env python
 
+import apache_beam
 import unittest
+
+from sfm.create_pipeline import CreatePipeline
+from sfm.options import SetPipelineOptions
+from sfm.streams import GroupStreams
+from sfm.streams import ReadStreams
+from sfm.tracks import ProcessTracks
+from sfm.tracks import ReadTracks
+from sfm.users import ProcessUsers
+from sfm.users import ReadUsers
 
 class TestProcessing(unittest.TestCase):
     pipeline = ""

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import apache_beam
 import unittest
 
 from sfm.options import SetPipelineOptions
