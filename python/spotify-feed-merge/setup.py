@@ -5,7 +5,7 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='sfm',
+    name='spotify-feed-merge',
     version='0.2.0',
     description='Merge three spotify feeds into one.',
     url='https://github.com/gahan-corporation/spotify-feed-merge',
@@ -17,9 +17,9 @@ setup(
         'sfm': ['sfm.conf'],
     },
     data_files=[
-        ('streams.gz', ['/srv/sfm/data/streams.gz']),
-        ('tracks.gz', ['/srv/sfm/data/tracks.gz']),
-        ('users.gz', ['/srv/sfm/data/users.gz']),
+        ('streams.gz', ['data/streams.gz']),
+        ('tracks.gz', ['data/tracks.gz']),
+        ('users.gz', ['data/users.gz']),
     ],
     test_suite='nose.collector',
     tests_require=['nose']
