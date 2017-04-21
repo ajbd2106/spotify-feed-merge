@@ -1,0 +1,11 @@
+---
+version: '2'
+services:
+  java:
+    build: java
+    volumes:
+    - .:/java
+  python:
+    build: sfm 
+...
+# vim: ft=ansible:

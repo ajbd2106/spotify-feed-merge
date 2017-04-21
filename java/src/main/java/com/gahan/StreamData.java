@@ -1,6 +1,12 @@
 package com.gahan;
 
-public class streamData {
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.*;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class StreamData {
   public String user_id;
   public String isrc;
   public String album_code;
@@ -24,6 +30,6 @@ public class streamData {
   public String device_type;
   public String message;
   public String os;
-  public String stream_country;
   public String report_date;
+  public String stream_country;
 }
