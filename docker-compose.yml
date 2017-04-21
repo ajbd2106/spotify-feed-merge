@@ -8,6 +8,6 @@ services:
   python:
     build: . 
     volumes:
-     - ./sfm:/sfm
+     - .:/sfm
 ...
 # vim: ft=ansible:
