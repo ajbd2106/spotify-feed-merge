@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
-import sfm
+import apache_beam
 import unittest
+
+from sfm.create_pipeline import CreatePipeline
+from sfm.options import SetPipelineOptions
 
 class TestCreatePipeline(unittest.TestCase):
     def setUp(self): 
