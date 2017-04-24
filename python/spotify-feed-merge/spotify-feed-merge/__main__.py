@@ -4,9 +4,6 @@ import apache_beam
 import configobj
 import json
 
-from .users import ProcessUsers
-from .users import ReadUsers
-
 class CreatePipeline(apache_beam.Pipeline):
     pipeline = []
 
