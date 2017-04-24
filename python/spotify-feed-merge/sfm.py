@@ -5,16 +5,20 @@ import configobj
 import json
 import pip
 
-
-
 from . import SetPipelineOptions
-from . import CreatePipeline
 from . import GroupStreams
 from . import ProcessTracks
 from . import ProcessUsers
 from . import ReadStreams
 from . import ReadTracks
 from . import ReadUsers
+
+class CreatePipeline(apache_beam.Pipeline):
+    pipeline = []
+
+    def __init__(self, options):
+        self.pipeline = apache_beam.Pipeline(options=options)
+
 
 def main():
     spo = SetPipelineOptions()

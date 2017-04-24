@@ -1,15 +1,3 @@
-#!/usr/bin/env python
-
-import apache_beam 
-import configobj 
-
-
-class CreatePipeline(apache_beam.Pipeline):
-    pipeline = []
-
-    def __init__(self, options):
-        self.pipeline = apache_beam.Pipeline(options=options)
-
 class GroupStreams:
     try:
         denormalized_path = configobj.ConfigObj("sfm/sfm.conf").get('standard').get('denormalized')
