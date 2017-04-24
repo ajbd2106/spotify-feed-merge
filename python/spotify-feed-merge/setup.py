@@ -5,7 +5,7 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='spotify-feed-merge',
+    name='spotifyfeedmerge',
     version='0.2.0',
     description='Merge three spotify feeds into one.',
     url='https://github.com/gahan-corporation/spotify-feed-merge',
