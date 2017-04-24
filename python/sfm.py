@@ -32,9 +32,9 @@ class GroupStreams:
              | 'output' >> apache_beam.io.WriteToText(self.denormalized_path)
         )
 
-    def remap_streams(self, streams):
-        return (streams
-            | 'remap streams' >> apache_beam.Map(lambda stream: (json.loads(stream).get('track_id'), json.loads(stream)))
+    def remap_streams(self, pipeline):
+        return (pipeline
+            | 'remap streams' >> apache_beam.Map(lambda stream_by_track_id: (json.loads(stream_by_track_id).get('track_id'), json.loads(stream_by_track_id)))
         )
 
 
@@ -175,11 +175,10 @@ def main():
     print(group_streams)
 
     streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
-
     print(streams_pc)
-
     streams_pc = streams_pc | 'process users' >> apache_beam.ParDo(ProcessUsers())
     streams_pc = group_streams.remap_streams(streams_pc)
+    print(streams_pc)
     streams_pc = streams_pc | 'process tracks' >> apache_beam.ParDo(ProcessTracks())
     streams_pc = group_streams.group_streams_with_tracks(pipeline, streams_pc, tracks_pc)
     streams_pc = group_streams.output_result(streams_pc)
