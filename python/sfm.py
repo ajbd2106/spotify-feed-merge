@@ -32,9 +32,20 @@ class GroupStreams:
              | 'output' >> apache_beam.io.WriteToText(self.denormalized_path)
         )
 
+    class RemapStreams(apache_beam.DoFn):
+        def process(self, element):
+            key, values = element
+            print(element)
+            print(key)
+            print(values)
+            return values
+
     def remap_streams(self, pipeline):
+        print(self)
+        print(type(pipeline))
+        print(pipeline.__dict__)
         return (pipeline
-            | 'remap streams' >> apache_beam.Map(lambda stream_by_track_id: (json.loads(stream_by_track_id).get('track_id'), json.loads(stream_by_track_id)))
+            | 'remap streams' >> self.RemapStreams() 
         )
 
 
@@ -156,34 +167,28 @@ def main():
     streams_pc = read_streams.read_streams(pipeline)
     streams_pc = read_streams.map_streams(streams_pc)
 
-    print(streams_pc)
-
     read_users = ReadUsers()
 
     users_pc = read_users.read_users(pipeline)
     users_pc = read_users.map_users(users_pc)
-
-    print(users_pc)
 
     read_tracks = ReadTracks()
 
     tracks_pc = read_tracks.read_tracks(pipeline)
     tracks_pc = read_tracks.map_tracks(tracks_pc)
 
-    print(tracks_pc)
-
     group_streams = GroupStreams()
 
-    print(group_streams)
-
     streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
-    print(streams_pc)
     streams_pc = streams_pc | 'process users' >> apache_beam.ParDo(ProcessUsers())
+
+    rs = group_streams.RemapStreams()
+
     streams_pc = group_streams.remap_streams(streams_pc)
     print(streams_pc)
-    streams_pc = streams_pc | 'process tracks' >> apache_beam.ParDo(ProcessTracks())
-    streams_pc = group_streams.group_streams_with_tracks(pipeline, streams_pc, tracks_pc)
-    streams_pc = group_streams.output_result(streams_pc)
+    #streams_pc = streams_pc | 'process tracks' >> apache_beam.ParDo(ProcessTracks())
+    #streams_pc = group_streams.group_streams_with_tracks(pipeline, streams_pc, tracks_pc)
+    #streams_pc = group_streams.output_result(streams_pc)
 
     pipeline.run()
 
