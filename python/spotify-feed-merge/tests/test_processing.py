@@ -3,14 +3,7 @@
 import apache_beam
 import unittest
 
-from sfm.create_pipeline import CreatePipeline
-from sfm.options import SetPipelineOptions
-from sfm.streams import GroupStreams
-from sfm.streams import ReadStreams
-from sfm.tracks import ProcessTracks
-from sfm.tracks import ReadTracks
-from sfm.users import ProcessUsers
-from sfm.users import ReadUsers
+import spotifyfeedmerge as s
 
 class TestProcessing(unittest.TestCase):
     pipeline = ""
@@ -19,7 +12,7 @@ class TestProcessing(unittest.TestCase):
     users = ""
 
     def setUp(self):
-        options = SetPipelineOptions()
+        options = s.SetPipelineOptions()
         google_cloud = options.config.get('google_cloud')
         runner = options.config.get('standard').get('runner')
         options.pipeline = options.set_pipeline()
