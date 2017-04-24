@@ -7,4 +7,4 @@ WORKDIR /srv/sfm
 RUN python setup.py build
 RUN python setup.py install 
 
-CMD ["/usr/bin/python", "/srv/sfm/setup.py", "test"]
+CMD ["/usr/bin/python", "/srv/sfm", "test"]

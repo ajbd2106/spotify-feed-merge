@@ -18,4 +18,6 @@ setup(
         ('tracks.gz', ['data/tracks.gz']),
         ('users.gz', ['data/users.gz']),
     ],
+    test_requires=['nose'],
+    test_suite='nose.collector',
 )
