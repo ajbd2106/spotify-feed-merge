@@ -124,7 +124,8 @@ class SetPipelineOptions:
 
     def __init__(self):
         self.google_cloud = SetPipelineOptions.config.get("google_cloud")
-        self.runner = SetPipelineOptions.config.get('standard').get('runner')
+        #self.runner = SetPipelineOptions.config.get('standard').get('runner')
+        self.runner = "DirectRunner" 
 
     def set_google_cloud_options(self, google_cloud, pipeline):
         options = pipeline.view_as(apache_beam.utils.pipeline_options.GoogleCloudOptions) 
@@ -145,6 +146,7 @@ class SetPipelineOptions:
 def main():
     spo = SetPipelineOptions()
     spo.options = spo.set_pipeline()
+    options = spo.set_pipeline()
     options = spo.set_google_cloud_options(spo.google_cloud, spo.options)
     options = spo.set_runner(spo.options, spo.config.get('standard').get('runner'))
     pipeline = CreatePipeline(options).pipeline
