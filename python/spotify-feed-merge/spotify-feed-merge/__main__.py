@@ -15,6 +15,12 @@ from .tracks import ReadTracks
 from .users import ProcessUsers
 from .users import ReadUsers
 
+class CreatePipeline(apache_beam.Pipeline):
+    pipeline = []
+
+    def __init__(self, options):
+        self.pipeline = apache_beam.Pipeline(options=options)
+
 def main():
     spo = SetPipelineOptions()
     spo.options = spo.set_pipeline()
