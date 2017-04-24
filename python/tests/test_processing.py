@@ -3,14 +3,14 @@
 import apache_beam
 import unittest
 
-from spotifyfeedmerge import CreatePipeline
-from spotifyfeedmerge import GroupStreams
-from spotifyfeedmerge import ProcessTracks
-from spotifyfeedmerge import ProcessUsers
-from spotifyfeedmerge import ReadStreams
-from spotifyfeedmerge import ReadTracks
-from spotifyfeedmerge import ReadUsers
-from spotifyfeedmerge import SetPipelineOptions
+from sfm import CreatePipeline
+from sfm import GroupStreams
+from sfm import ProcessTracks
+from sfm import ProcessUsers
+from sfm import ReadStreams
+from sfm import ReadTracks
+from sfm import ReadUsers
+from sfm import SetPipelineOptions
 
 
 class TestProcessing(unittest.TestCase):
