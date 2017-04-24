@@ -3,7 +3,15 @@
 import apache_beam
 import unittest
 
-import spotifyfeedmerge as s
+from spotifyfeedmerge import CreatePipeline
+from spotifyfeedmerge import GroupStreams
+from spotifyfeedmerge import ProcessTracks
+from spotifyfeedmerge import ProcessUsers
+from spotifyfeedmerge import ReadStreams
+from spotifyfeedmerge import ReadTracks
+from spotifyfeedmerge import ReadUsers
+from spotifyfeedmerge import SetPipelineOptions
+
 
 class TestProcessing(unittest.TestCase):
     pipeline = ""
@@ -12,7 +20,7 @@ class TestProcessing(unittest.TestCase):
     users = ""
 
     def setUp(self):
-        options = s.SetPipelineOptions()
+        options = SetPipelineOptions()
         google_cloud = options.config.get('google_cloud')
         runner = options.config.get('standard').get('runner')
         options.pipeline = options.set_pipeline()
