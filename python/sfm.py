@@ -34,18 +34,12 @@ class GroupStreams:
 
     class RemapStreams(apache_beam.DoFn):
         def process(self, element):
-            key, values = element
-            print(element)
-            print(key)
-            print(values)
-            return values
+            return_value = {element.get('track_id'): element}
+            return [return_value]
 
     def remap_streams(self, pipeline):
-        print(self)
-        print(type(pipeline))
-        print(pipeline.__dict__)
         return (pipeline
-            | 'remap streams' >> self.RemapStreams() 
+            | 'remap streams' >> apache_beam.ParDo(self.RemapStreams()) 
         )
 
 
@@ -181,8 +175,6 @@ def main():
 
     streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
     streams_pc = streams_pc | 'process users' >> apache_beam.ParDo(ProcessUsers())
-
-    rs = group_streams.RemapStreams()
 
     streams_pc = group_streams.remap_streams(streams_pc)
     print(streams_pc)
