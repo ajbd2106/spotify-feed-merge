@@ -6,6 +6,6 @@ services:
     volumes:
     - .:/java
   python:
-    build: python/spotify-feed-merge 
+    build: python
 ...
 # vim: ft=ansible:
