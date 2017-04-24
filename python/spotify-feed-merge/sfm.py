@@ -3,15 +3,7 @@
 import apache_beam
 import configobj
 import json
-import pip
 
-from . import SetPipelineOptions
-from . import GroupStreams
-from . import ProcessTracks
-from . import ProcessUsers
-from . import ReadStreams
-from . import ReadTracks
-from . import ReadUsers
 
 class CreatePipeline(apache_beam.Pipeline):
     pipeline = []
