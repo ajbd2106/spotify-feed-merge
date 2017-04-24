@@ -3,8 +3,8 @@
 import apache_beam
 import unittest
 
-import spotifyfeedmerge
-
+from spotifyfeedmerge import CreatePipeline
+from spotifyfeedmerge import SetPipelineOptions
 
 class TestCreatePipeline(unittest.TestCase):
     def setUp(self): 

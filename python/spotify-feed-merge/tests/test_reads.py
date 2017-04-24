@@ -3,7 +3,11 @@
 import apache_beam
 import unittest
 
-import spotifyfeedmerge
+from spotifyfeedmerge import CreatePipeline
+from spotifyfeedmerge import ReadStreams
+from spotifyfeedmerge import ReadTracks
+from spotifyfeedmerge import ReadUsers
+from spotifyfeedmerge import SetPipelineOptions
 
 class TestReads(unittest.TestCase):
     pipeline = ""
