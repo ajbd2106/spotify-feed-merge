@@ -34,7 +34,7 @@ class GroupStreams:
 
     def remap_streams(self, streams):
         return (streams
-            | 'remap streams' >> apache_beam.Map(lambda streams: (json.loads(streams).get('track_id'), json.loads(streams)))
+            | 'remap streams' >> apache_beam.Map(lambda stream: (json.loads(stream).get('track_id'), json.loads(stream)))
         )
 
 
@@ -172,7 +172,12 @@ def main():
 
     group_streams = GroupStreams()
 
+    print(group_streams)
+
     streams_pc = group_streams.group_streams_with_users(streams_pc, users_pc)
+
+    print(streams_pc)
+
     streams_pc = streams_pc | 'process users' >> apache_beam.ParDo(ProcessUsers())
     streams_pc = group_streams.remap_streams(streams_pc)
     streams_pc = streams_pc | 'process tracks' >> apache_beam.ParDo(ProcessTracks())
