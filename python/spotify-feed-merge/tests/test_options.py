@@ -3,7 +3,7 @@
 import apache_beam
 import unittest
 
-from sfm.options import SetPipelineOptions
+import spotifyfeedmerge 
 
 class TestOptions(unittest.TestCase):
     def setUp(self):
