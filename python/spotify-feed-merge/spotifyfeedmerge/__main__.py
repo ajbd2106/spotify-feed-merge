@@ -3,6 +3,9 @@
 import apache_beam
 import configobj
 import json
+import pip
+
+
 
 from . import SetPipelineOptions
 from . import CreatePipeline

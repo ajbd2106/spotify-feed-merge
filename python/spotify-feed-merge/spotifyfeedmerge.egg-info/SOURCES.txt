@@ -1,8 +1,0 @@
-data/streams.gz
-data/tracks.gz
-data/users.gz
-spotifyfeedmerge.egg-info/PKG-INFO
-spotifyfeedmerge.egg-info/SOURCES.txt
-spotifyfeedmerge.egg-info/dependency_links.txt
-spotifyfeedmerge.egg-info/requires.txt
-spotifyfeedmerge.egg-info/top_level.txt
